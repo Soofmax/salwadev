@@ -40,8 +40,7 @@ Voici votre projet SDS avec toutes les pages principales créées selon vos spé
 ## 🚀 Installation et Démarrage
 
 ```bash
-# Installation des dépendances
-npm install --legacy-peer-deps
+
 
 # Démarrage en développement
 npm run dev
