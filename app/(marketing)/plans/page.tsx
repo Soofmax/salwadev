@@ -164,9 +164,10 @@ const additionalServices = [
   }
 ];
 
+import { PageContainer } from '@/components/PageContainer';
 export default function PlansPage() {
   return (
-    <div className="bg-cream min-h-screen py-24 sm:py-32">
+    <PageContainer className="bg-cream min-h-screen py-24 sm:py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <header className="max-w-4xl mx-auto text-center mb-16">
@@ -174,7 +175,6 @@ export default function PlansPage() {
             <Crown className="w-4 h-4 text-magenta" />
             <span className="text-sm font-medium text-charcoal">Plans & Abonnements</span>
           </div>
-          
           <h1 className="text-4xl font-playfair font-bold tracking-tight text-charcoal sm:text-6xl">
             Choisissez Votre Plan
           </h1>
@@ -182,7 +182,6 @@ export default function PlansPage() {
             Des solutions web récurrentes adaptées à vos besoins. Maintenance, support et évolutions 
             inclus pour faire grandir votre présence en ligne.
           </p>
-          
           <nav aria-label="Breadcrumb" className="mt-8">
             <ol className="flex items-center justify-center space-x-2 text-sm text-charcoal/60">
               <li><Link href="/" className="hover:text-magenta transition-colors">Accueil</Link></li>
