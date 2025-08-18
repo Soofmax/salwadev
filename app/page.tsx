@@ -1,8 +1,7 @@
 import { HeroSection } from '@/components/sections/HeroSection';
 import { ServicesSection } from '@/components/sections/ServicesSection';
 import { TestimonialsSection } from '@/components/sections/TestimonialsSection';
-// Utilisation du composant CTA universel
-import { SectionCTA } from '@/components/common/SectionCTA';
+import { SectionCTA } from '@/components/sections/SectionCTA';
 import { Sparkles, ArrowRight, MessageCircle } from 'lucide-react';
 import { CartSidebar } from '@/components/cart/CartSidebar';
 import { JsonLd, organizationSchema, reviewsSchema } from '@/components/seo/JsonLd';
