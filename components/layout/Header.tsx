@@ -27,7 +27,7 @@ export function Header() {
               <Sparkles className="w-5 h-5 text-white" />
             </div>
             <span className="font-playfair text-2xl font-bold text-gradient">
-              SDS
+              Salwa Dev Studio
             </span>
           </Link>
 

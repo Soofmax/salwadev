@@ -104,7 +104,7 @@ export default function AdminDashboard() {
               Tableau de Bord Administrateur
             </h1>
             <p className="text-charcoal/60 mt-2">
-              Vue d'ensemble de votre plateforme SDS
+              Vue d'ensemble de votre plateforme Salwa Dev Studio
             </p>
           </div>
           <div className="flex items-center space-x-4">

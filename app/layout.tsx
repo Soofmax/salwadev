@@ -27,8 +27,8 @@ const montserrat = Montserrat({
 export const metadata: Metadata = {
   metadataBase: new URL('https://votre-domaine.com'), // <-- Mettez votre URL de production ici
   title: {
-    default: 'SDS - Services de Développement Sur-Mesure',
-    template: '%s | SDS', // Permet aux pages enfants de définir leur propre titre (ex: "Services | SDS")
+    default: 'Salwa Dev Studio - Services de Développement Sur-Mesure',
+    template: '%s | Salwa Dev Studio', // Permet aux pages enfants de définir leur propre titre (ex: "Services | Salwa Dev Studio")
   },
   description:
     'Créatrice de solutions web glamour et performantes. Sites vitrines, landing pages, intégrations Web3 et plus encore.',

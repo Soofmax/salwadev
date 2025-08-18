@@ -50,7 +50,7 @@ function AuthSuccessContent() {
       case 'account-created':
         return {
           title: 'Compte créé !',
-          description: 'Votre compte a été créé avec succès. Bienvenue dans notre communauté !',
+          description: 'Votre compte a été créé avec succès. Bienvenue sur la plateforme Salwa Dev Studio !',
           redirect: '/dashboard',
           linkText: 'Accéder au tableau de bord',
           icon: <CheckCircle className="w-8 h-8 text-green-600" />

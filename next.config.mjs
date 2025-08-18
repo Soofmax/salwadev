@@ -28,7 +28,7 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-    serverComponentsExternalPackages: [],
+  serverExternalPackages: [],
   },
 
   // Configuration du compilateur
@@ -39,7 +39,7 @@ const nextConfig = {
   },
 
   // Optimisation SWC
-  swcMinify: true,
+
 
   // Configuration des headers pour le cache
   async headers() {
