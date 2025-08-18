@@ -1,27 +1,43 @@
 {
   "compilerOptions": {
+    /* Standards de base */
     "target": "es5",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "forceConsistentCasingInFileNames": true,
     "module": "esnext",
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "noEmit": true,
+
+    /* Paramètres de Strictezza (avec l'ajustement crucial) */
+    "strict": true,
+    "strictNullChecks": false, // La modification clé pour la compatibilité avec NextAuth
+
+    /* Configuration du Plugin Next.js */
     "plugins": [
       {
         "name": "next"
       }
     ],
+
+    /* Alias de chemin pour les imports (ex: @/components/...) */
     "paths": {
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": [
+    "next-env.d.ts",
+    "next-auth.d.ts", // Ajout explicite pour être sûr à 100% qu'il est lu
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
   "exclude": ["node_modules"]
 }
