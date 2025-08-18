@@ -34,3 +34,6 @@ Thumbs.db
 *.zip
 *.tar.gz
 *.tmp
+
+# Ignorer les fichiers de types générés par Next.js
+types/

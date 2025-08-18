@@ -131,7 +131,7 @@ export default function CatalogPage() {
   const [sortBy, setSortBy] = useState('popular');
 
   const filteredItems = useMemo(() => {
-    let filtered = catalogItems.filter(item => {
+    const filtered = catalogItems.filter(item => {
       const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
                            item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));

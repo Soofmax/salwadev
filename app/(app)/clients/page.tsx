@@ -154,7 +154,7 @@ export default function ClientsPage() {
   const [sortBy, setSortBy] = useState('name');
 
   const filteredClients = useMemo(() => {
-    let filtered = mockClients.filter(client => {
+    const filtered = mockClients.filter(client => {
       const matchesSearch = 
         client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         client.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
