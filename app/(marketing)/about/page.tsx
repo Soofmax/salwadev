@@ -5,12 +5,14 @@ import { AboutTechSection } from '@/components/sections/AboutTechSection';
 import { AboutTimelineSection } from '@/components/sections/AboutTimelineSection';
 import { AboutFounderSection } from '@/components/sections/AboutFounderSection';
 import { AboutPortfolioLink } from '@/components/sections/AboutPortfolioLink';
-import { AboutCTASection } from '@/components/sections/AboutCTASection';
+// Remplace l'ancien AboutCTASection par le nouveau composant SectionCTA
+import { SectionCTA } from '@/components/common/SectionCTA';
+import { Target } from 'lucide-react';
 
 export const metadata = {
-  title: 'À Propos | Soofmaax - Studio de Développement Web Expert',
-  description: 'Découvrez Soofmaax, votre partenaire de confiance pour le développement web. Plus de 50 projets réalisés, une expertise technique reconnue et une approche centrée sur vos besoins.',
-  keywords: ['développement web', 'studio digital', 'Next.js', 'React', 'TypeScript', 'Soofmaax'],
+  title: 'À Propos | Salwa Dev Studio - Studio de Développement Web Expert',
+  description: 'Découvrez Salwa Dev Studio, votre partenaire de confiance pour le développement web. Plus de 50 projets réalisés, une expertise technique reconnue et une approche centrée sur vos besoins.',
+  keywords: ['développement web', 'studio digital', 'Next.js', 'React', 'TypeScript', 'Salwa Dev Studio'],
 };
 
 export default function AboutPage() {
@@ -33,7 +35,27 @@ export default function AboutPage() {
         <AboutTimelineSection />
         <AboutFounderSection />
         <AboutPortfolioLink />
-        <AboutCTASection />
+
+        {/* Nouveau CTA universel */}
+        <SectionCTA
+          icon={Target}
+          title="Prêt à concrétiser votre projet ?"
+          subtitle="Discutons de vos objectifs et découvrons ensemble comment nous pouvons vous aider à les atteindre."
+          actions={[
+            {
+              label: "Démarrer un projet",
+              href: "/contact",
+              variant: "secondary",
+              className: "bg-white text-magenta hover:bg-cream shadow-lg"
+            },
+            {
+              label: "Voir nos services",
+              href: "/services",
+              variant: "outline",
+              className: "border-2 border-white text-white hover:bg-white hover:text-magenta"
+            }
+          ]}
+        />
       </div>
     </div>
   );
