@@ -7,4 +7,12 @@ const compat = new FlatCompat();
 export default [
   ...compat.extends('next/core-web-vitals'),
   ...compat.extends('next/typescript'),
+  {
+    plugins: {
+      '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
+    },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'error',
+    },
+  },
 ];

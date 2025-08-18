@@ -18,7 +18,9 @@
 
     /* Paramètres de Strictezza (avec l'ajustement crucial) */
     "strict": true,
-    "strictNullChecks": false, // La modification clé pour la compatibilité avec NextAuth
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
 
     /* Configuration du Plugin Next.js */
     "plugins": [
