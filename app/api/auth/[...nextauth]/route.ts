@@ -52,11 +52,13 @@ const handler = NextAuth({
      * Il sert à envoyer les données du token vers le client.
      */
     async session({ session, token }) {
-      // On remplace l'objet 'session.user' par le contenu complet du 'token'.
-      // Le token contient déjà toutes nos propriétés étendues (id, role, status, etc.).
-      // Le 'as any' indique à TypeScript de nous faire confiance sur la structure de l'objet,
-      // ce qui est sûr ici grâce à notre fichier next-auth.d.ts et au tsconfig.json ajusté.
-      session.user = token as any;
+      // Grâce à l'augmentation de types, on peut caster token en type JWT pour avoir l'autocomplétion et la sécurité.
+      session.user = {
+        id: token.id as string,
+        role: token.role as string,
+        name: token.name as string,
+        email: token.email as string,
+      };
       return session;
     },
   },
