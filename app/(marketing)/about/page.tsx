@@ -1,40 +1,59 @@
-import { AboutHeroSection } from '@/components/sections/AboutHeroSection';
-import { AboutStatsSection } from '@/components/sections/AboutStatsSection';
-import { AboutValuesSection } from '@/components/sections/AboutValuesSection';
-import { AboutTechSection } from '@/components/sections/AboutTechSection';
-import { AboutTimelineSection } from '@/components/sections/AboutTimelineSection';
-import { AboutFounderSection } from '@/components/sections/AboutFounderSection';
-import { AboutPortfolioLink } from '@/components/sections/AboutPortfolioLink';
-import { AboutCTASection } from '@/components/sections/AboutCTASection';
+import Link from 'next/link';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { MapPin, Mail, Linkedin, Github } from 'lucide-react';
 
-export const metadata = {
-  title: 'À Propos | Soofmaax - Studio de Développement Web Expert',
-  description: 'Découvrez Soofmaax, votre partenaire de confiance pour le développement web. Plus de 50 projets réalisés, une expertise technique reconnue et une approche centrée sur vos besoins.',
-  keywords: ['développement web', 'studio digital', 'Next.js', 'React', 'TypeScript', 'Soofmaax'],
-};
-
-export default function AboutPage() {
+export function AboutFounderSection() {
   return (
-    <div className="bg-cream py-24 sm:py-32 relative overflow-hidden">
-      {/* Motif discret en arrière-plan */}
-      <div className="absolute inset-0 pointer-events-none z-0">
-        <div className="w-full h-full opacity-10" style={{
-          backgroundImage:
-            'radial-gradient(circle, #ead2d8 2px, transparent 1px), radial-gradient(circle, #ead2d8 2px, transparent 1px)',
-          backgroundSize: '28px 28px',
-          backgroundPosition: '0 0, 14px 14px'
-        }} />
+    <section className="mt-24 pt-20 border-t border-rose-powder/20">
+      <header className="text-center mb-12">
+        <h2 className="text-3xl font-playfair font-bold tracking-tight text-charcoal sm:text-5xl">
+          Rencontrez la créatrice
+        </h2>
+      </header>
+      <div className="max-w-4xl mx-auto">
+        <article className="bg-white rounded-2xl p-8 border border-rose-powder/30 hover:border-magenta hover:shadow-rose transition-all duration-300">
+          <div className="flex flex-col md:flex-row items-center gap-8">
+            <div className="flex-shrink-0">
+              <Avatar className="w-32 h-32 border-4 border-rose-powder/30">
+                <AvatarImage src="/images/founder-avatar.jpg" alt="Salwa" />
+                <AvatarFallback className="text-2xl bg-rose-powder/20 text-charcoal font-playfair">
+                  SW
+                </AvatarFallback>
+              </Avatar>
+            </div>
+            <div className="flex-1 text-center md:text-left">
+              <h3 className="text-2xl font-playfair font-bold text-charcoal mb-2">
+                Salwa
+              </h3>
+              <p className="text-magenta font-semibold mb-4">
+                Créatrice & Lead Developer
+              </p>
+              <p className="text-charcoal/80 mb-6 leading-relaxed">
+                Passionnée de développement web depuis plus de 5 ans, j'ai créé Salwa Dev Studio 
+                avec la conviction que chaque entreprise mérite des solutions numériques 
+                à la hauteur de ses ambitions.
+              </p>
+              <div className="flex flex-col sm:flex-row items-center gap-6">
+                <div className="flex items-center gap-2 text-charcoal/70">
+                  <MapPin className="w-4 h-4" />
+                  <span>Paris, France</span>
+                </div>
+                <div className="flex gap-2">
+                  <Link href="mailto:contact@salwadev.com" className="p-2 bg-rose-powder/20 hover:bg-magenta hover:text-white rounded-lg transition-all duration-300" aria-label="Envoyer un email">
+                    <Mail className="w-4 h-4" />
+                  </Link>
+                  <Link href="#" className="p-2 bg-rose-powder/20 hover:bg-magenta hover:text-white rounded-lg transition-all duration-300" aria-label="Profil LinkedIn">
+                    <Linkedin className="w-4 h-4" />
+                  </Link>
+                  <Link href="#" className="p-2 bg-rose-powder/20 hover:bg-magenta hover:text-white rounded-lg transition-all duration-300" aria-label="Profil GitHub">
+                    <Github className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
       </div>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <AboutHeroSection />
-        <AboutStatsSection />
-        <AboutValuesSection />
-        <AboutTechSection />
-        <AboutTimelineSection />
-        <AboutFounderSection />
-        <AboutPortfolioLink />
-        <AboutCTASection />
-      </div>
-    </div>
+    </section>
   );
 }
