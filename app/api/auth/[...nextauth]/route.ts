@@ -3,7 +3,7 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { mockUsers } from "@/src/data/mocks/mockUsers";
-import { User } from "next-auth"; // Importer le type User pour plus de clarté
+// L'import de 'User' n'est plus strictement nécessaire avec cette approche, mais ne pose pas de problème.
 
 const handler = NextAuth({
   providers: [
@@ -19,44 +19,49 @@ const handler = NextAuth({
         );
 
         // Si l'utilisateur est trouvé, on retourne l'objet utilisateur complet.
-        // NextAuth utilisera cet objet dans le callback 'jwt'.
+        // C'est parfait, car le callback 'jwt' pourra l'utiliser.
         if (user) {
-          return user; // Retourne l'objet utilisateur complet, pas seulement une partie
+          return user;
         } else {
           return null;
         }
       },
     }),
   ],
+  
+  // ==================================================================
+  // SECTION CORRIGÉE ET OPTIMISÉE
+  // ==================================================================
   callbacks: {
-    // Le callback 'jwt' est appelé en premier. Il reçoit l'objet 'user' du 'authorize'
-    // uniquement lors de la première connexion.
+    /**
+     * Ce callback est appelé quand un token JWT est créé (à la connexion).
+     * Il sert à enrichir le token avec les données de l'utilisateur.
+     */
     async jwt({ token, user }) {
-      // Si 'user' existe, cela signifie que c'est la connexion initiale.
-      // On copie toutes les données de l'utilisateur dans le token.
+      // L'objet 'user' n'est disponible que lors de la première connexion.
+      // On utilise l'opérateur "spread" (...) pour fusionner toutes les propriétés
+      // de l'objet 'user' dans le 'token'. C'est propre et évolutif.
       if (user) {
-        token.id = user.id;
-        token.role = user.role;
-        // On peut aussi passer d'autres propriétés si besoin
-        // token.status = user.status; // Exemple
+        return { ...token, ...user };
       }
       return token;
     },
-    // Le callback 'session' est appelé après 'jwt'. Il reçoit le token
-    // et construit l'objet session qui sera visible côté client.
+
+    /**
+     * Ce callback est appelé quand une session est accédée côté client.
+     * Il sert à envoyer les données du token vers le client.
+     */
     async session({ session, token }) {
-      // On s'assure que session.user existe avant de lui assigner des propriétés
-      if (session.user) {
-        // On copie les propriétés du token vers l'objet session.user
-        // Le type 'Session' que nous avons défini dans 'next-auth.d.ts'
-        // nous autorise à faire ces assignations.
-        session.user.id = token.id as string;
-        session.user.role = token.role as string;
-        // session.user.status = token.status; // Exemple
-      }
+      // On remplace l'objet 'session.user' par le contenu complet du 'token'.
+      // Le token contient déjà toutes nos propriétés étendues (id, role, status, etc.).
+      // Le 'as any' indique à TypeScript de nous faire confiance sur la structure de l'objet,
+      // ce qui est sûr ici grâce à notre fichier next-auth.d.ts et au tsconfig.json ajusté.
+      session.user = token as any;
       return session;
     },
   },
+  // ==================================================================
+
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signout",
