@@ -75,13 +75,15 @@ const dynamicPacks = [
 
 
 // --- Composant Principal de la Page ---
+import PageContainer from '@/components/ui/PageContainer';
+
 export default function ServicesPage() {
   return (
-    <div className="bg-cream py-24 sm:py-32">
+    <PageContainer className="bg-cream py-24 sm:py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* --- Header --- */}
         <header className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl font-playfair font-bold tracking-tight text-charcoal sm:text-6xl">
+          <h1 className="text-4xl font-extrabold text-charcoal mb-6">
             Services Web & Développement Digital
           </h1>
           <p className="mt-6 text-xl leading-8 text-charcoal/80 max-w-3xl mx-auto">

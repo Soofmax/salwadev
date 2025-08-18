@@ -5,9 +5,9 @@ import { AboutTechSection } from '@/components/sections/AboutTechSection';
 import { AboutTimelineSection } from '@/components/sections/AboutTimelineSection';
 import { AboutFounderSection } from '@/components/sections/AboutFounderSection';
 import { AboutPortfolioLink } from '@/components/sections/AboutPortfolioLink';
-// Remplace l'ancien AboutCTASection par le nouveau composant SectionCTA
 import { SectionCTA } from '@/components/common/SectionCTA';
 import { Target } from 'lucide-react';
+import PageContainer from '@/components/ui/PageContainer';
 
 export const metadata = {
   title: 'À Propos | Salwa Dev Studio - Studio de Développement Web Expert',
@@ -17,7 +17,7 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="bg-cream py-24 sm:py-32 relative overflow-hidden">
+    <PageContainer className="bg-cream py-24 sm:py-32 relative overflow-hidden">
       {/* Motif discret en arrière-plan */}
       <div className="absolute inset-0 pointer-events-none z-0">
         <div className="w-full h-full opacity-10" style={{
@@ -28,6 +28,8 @@ export default function AboutPage() {
         }} />
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        {/* Titre principal uniforme */}
+        <h1 className="text-4xl font-extrabold text-charcoal mb-6">À propos</h1>
         <AboutHeroSection />
         <AboutStatsSection />
         <AboutValuesSection />
@@ -57,6 +59,6 @@ export default function AboutPage() {
           ]}
         />
       </div>
-    </div>
+    </PageContainer>
   );
 }

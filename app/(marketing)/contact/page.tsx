@@ -56,10 +56,13 @@ const quickServices: Service[] = [
   }
 ];
 
+import PageContainer from '@/components/ui/PageContainer';
+
 export default function ContactPage() {
   return (
-    <div className="bg-cream py-24 sm:py-32">
+    <PageContainer className="bg-cream py-24 sm:py-32">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <h1 className="text-4xl font-extrabold text-charcoal mb-6">Contact</h1>
         {/* Hero Section, Breadcrumb, etc. */}
         
         <section className="mt-20">
@@ -69,7 +72,7 @@ export default function ContactPage() {
         <section className="mt-24 pt-20 border-t border-rose-powder/20">
           <div className="max-w-4xl mx-auto">
             <header className="text-center mb-12">
-              <h2 className="text-3xl font-playfair font-bold tracking-tight text-charcoal sm:text-5xl">
+              <h2 className="text-3xl font-bold text-charcoal mb-4">
                 Parlez-nous de votre projet
               </h2>
               <p className="mt-6 text-lg leading-8 text-charcoal/80">
