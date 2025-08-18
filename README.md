@@ -1,226 +1,105 @@
-# SDS Frontend - Plateforme SaaS Next.js
+# ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white) ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black) ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white) ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=flat&logo=tailwind-css&logoColor=white)
 
-Une plateforme SaaS moderne et complète construite avec Next.js 15, TypeScript, Tailwind CSS et shadcn/ui.
+## Salwadev
 
-## 🚀 Fonctionnalités
+Salwadev est une application web moderne construite avec Next.js et React, offrant une interface utilisateur intuitive pour la gestion des utilisateurs, des factures, des tickets de support et d'autres fonctionnalités essentielles pour les entreprises. Ce projet vise à simplifier les interactions entre les clients et les services, tout en fournissant des outils d'analyse et de gestion.
 
-### ✅ Pages d'authentification (8/8) - 100% terminé
-- Demande de réinitialisation du mot de passe (`/auth/reset-password`)
-- Saisie du nouveau mot de passe via lien (`/auth/reset-password/[token]`)
-- Vérification d'email après inscription (`/auth/verify-email`)
-- Confirmation d'inscription (`/auth/signup-success`)
-- Affichage d'erreur liée à l'authentification (`/auth/error`)
-- Affichage de succès lié à l'authentification (`/auth/success`)
-- Page profil utilisateur (`/profile`)
-- Gestion sécurité du compte (`/profile/security`)
+### Fonctionnalités clés
 
-### ✅ Pages d'administration (9/9) - 100% terminé
-- Dashboard administrateur (`/admin/dashboard`)
-- Configuration générale (`/admin/settings`)
-- Gestion équipe (`/admin/settings/team`)
-- Rôles & permissions (`/admin/settings/roles`)
-- APIs tierces (`/admin/settings/integrations`)
-- Admin utilisateurs (`/admin/users`)
-- Profil utilisateur admin (`/admin/users/[userId]`)
-- Logs système (`/admin/system/logs`)
-- Monitoring (`/admin/system/monitoring`)
+- **Gestion des utilisateurs** : Inscription, connexion, et gestion des profils utilisateurs.
+- **Facturation** : Suivi des factures et des méthodes de paiement.
+- **Support client** : Système de tickets pour la gestion des demandes de support.
+- **Analytique** : Outils d'analyse pour suivre les performances des services.
+- **Interface utilisateur réactive** : Conçue avec Tailwind CSS pour une expérience utilisateur fluide.
 
-### ✅ Pages de gestion de contenu (2/5) - 40% terminé
-- Gestion articles de blog (`/admin/content/blog`)
-- Nouvel article (`/admin/content/blog/new`)
+## Tech Stack
 
-### ✅ Pages de communication (3/3) - 100% terminé
-- Messagerie interne (`/messages`)
-- Centre de notifications (`/notifications`)
-- Chat client support (`/chat`)
+| Technologie    | Description                                   |
+|----------------|-----------------------------------------------|
+| ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)  | Environnement d'exécution JavaScript côté serveur. |
+| ![React](https://img.shields.io/badge/React-61DAFB?style=flat&logo=react&logoColor=black)         | Bibliothèque JavaScript pour construire des interfaces utilisateur. |
+| ![Next.js](https://img.shields.io/badge/Next.js-000000?style=flat&logo=next.js&logoColor=white) | Framework React pour le rendu côté serveur et la génération de sites statiques. |
+| ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=flat&logo=tailwind-css&logoColor=white) | Framework CSS utilitaire pour des conceptions modernes. |
 
-### ✅ Pages de support (4/4) - 100% terminé
-- Centre d'aide (`/support`)
-- Gestion tickets support (`/tickets`)
-- Détail ticket (`/tickets/[ticketId]`)
-- Base de connaissances (`/kb`)
+## Instructions d'installation
 
-### 📦 Catalogue & Produits (existant)
-- Page Catalogue (`/catalog`) - Liste complète des produits/services
-- Détail Produit (`/catalog/[productId]`) - Page détaillée avec fonctionnalités
-- Plans & Abonnements (`/plans`) - Comparatif des plans
-- Comparatif Fonctionnalités (`/features`) - Tableau de comparaison
+### Prérequis
 
-### 👥 CRM & Clients (existant)
-- Gestion des Clients (`/clients`) - Interface complète avec statistiques
-- Profil Client (`/clients/[clientId]`) - Vue détaillée avec projets
-- Nouveau Client (`/clients/new`) - Formulaire complet
+- Node.js (version 14 ou supérieure)
+- npm (ou yarn)
 
-### 📊 Analytics (existant)
-- Dashboard Analytics (`/analytics`) - Statistiques et métriques business
+### Étapes d'installation
 
-## 🛠️ Technologies
-
-- **Framework**: Next.js 15 avec App Router
-- **Langage**: TypeScript
-- **Styling**: Tailwind CSS
-- **Composants UI**: shadcn/ui
-- **Icônes**: Lucide React
-- **Authentification**: NextAuth.js (configuré)
-- **Base de données**: Prisma (configuré)
-
-## 🎨 Design System
-
-Le projet utilise un design system cohérent avec :
-- **Couleurs personnalisées**: cream, rose-powder, magenta, charcoal
-- **Typographie**: Playfair Display pour les titres, Inter pour le texte
-- **Composants**: Interface utilisateur moderne et responsive
-- **Thème**: Design élégant et professionnel
-
-## 📁 Structure du projet
-
-```
-app/
-├── (app)/                    # Pages utilisateur
-│   ├── auth/                # Authentification
-│   ├── profile/             # Profil utilisateur
-│   ├── messages/            # Messagerie
-│   ├── notifications/       # Notifications
-│   ├── chat/               # Chat support
-│   ├── support/            # Centre d'aide
-│   ├── tickets/            # Tickets support
-│   └── kb/                 # Base de connaissances
-├── (admin)/                 # Pages administration
-│   ├── dashboard/          # Dashboard admin
-│   ├── settings/           # Configuration
-│   ├── users/              # Gestion utilisateurs
-│   ├── system/             # Système
-│   └── content/            # Gestion contenu
-├── (marketing)/            # Pages marketing (existant)
-└── components/             # Composants réutilisables
-```
-
-## 🚀 Installation et démarrage
-
-1. **Cloner le projet**
+1. **Clonez le dépôt**
    ```bash
-   git clone https://github.com/Soofmaax/sdsfrontfe.git
-   cd sdsfrontfe
+   git clone https://github.com/Soofmax/salwadev.git
+   cd salwadev
    ```
 
-2. **Installer les dépendances**
+2. **Installez les dépendances**
    ```bash
    npm install
    ```
 
-3. **Configurer l'environnement**
-   ```bash
-   cp .env.example .env.local
-   # Éditer .env.local avec vos variables
-   ```
+3. **Configuration de l'environnement**
+   - Renommez le fichier `.env.example` en `.env` et configurez les variables d'environnement selon vos besoins.
 
-4. **Lancer en développement**
+4. **Démarrez le serveur de développement**
    ```bash
    npm run dev
    ```
 
-5. **Build de production**
-   ```bash
-   npm run build
-   npm start
-   ```
+5. **Accédez à l'application**
+   Ouvrez votre navigateur et allez à [http://localhost:3000](http://localhost:3000).
 
-## 🌐 Déploiement Netlify
+## Utilisation
 
-Le projet est optimisé pour Netlify :
+Après avoir démarré le serveur, vous pouvez naviguer dans l'application pour explorer les différentes fonctionnalités. Les principales pages incluent :
 
-1. **Build automatique** : `npm run build`
-2. **Dossier de publication** : `.next`
-3. **Fonctions** : Support des API routes Next.js
-4. **Variables d'environnement** : Configurées dans Netlify
+- **Tableau de bord** : Vue d'ensemble des statistiques et des performances.
+- **Gestion des utilisateurs** : Créer, modifier et supprimer des utilisateurs.
+- **Facturation** : Gérer les factures et les méthodes de paiement.
+- **Support** : Soumettre et gérer des tickets de support.
 
-### Configuration Netlify recommandée :
-```toml
-[build]
-  command = "npm run build"
-  publish = ".next"
+## Structure du projet
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+Voici un aperçu de la structure du projet :
+
+```
+salwadev/
+├── app/                     # Contient les pages et composants de l'application
+│   ├── (admin)/             # Pages et composants pour les administrateurs
+│   ├── (app)/               # Pages et composants pour les utilisateurs
+│   ├── (marketing)/         # Pages de marketing
+│   ├── api/                 # API pour l'authentification
+│   ├── components/          # Composants réutilisables
+│   ├── globals.css          # Styles globaux
+│   ├── layout.tsx           # Mise en page principale
+│   ├── page.tsx             # Page d'accueil
+│   └── providers.tsx        # Fournisseurs de contexte
+├── hooks/                   # Hooks personnalisés
+├── lib/                     # Logique métier et constantes
+├── public/                  # Fichiers publics (images, favicon)
+├── .env.example             # Exemple de fichier d'environnement
+├── package.json             # Dépendances et scripts du projet
+└── README.md                # Documentation du projet
 ```
 
-## 📋 Fonctionnalités clés
+### Explication des fichiers principaux
 
-### 🔐 Authentification complète
-- Inscription/Connexion
-- Réinitialisation de mot de passe
-- Vérification d'email
-- Gestion de profil et sécurité
+- `app/layout.tsx` : Définit la mise en page générale de l'application.
+- `app/page.tsx` : Point d'entrée de l'application.
+- `components/` : Contient tous les composants réutilisables de l'application.
+- `lib/` : Contient la logique métier, les actions et les constantes.
 
-### 👨‍💼 Administration avancée
-- Dashboard avec métriques
-- Gestion des utilisateurs et équipes
-- Configuration système
-- Logs et monitoring
+## Contribuer
 
-### 💬 Communication intégrée
-- Messagerie interne
-- Notifications en temps réel
-- Chat support client
-- Système de tickets
+Les contributions sont les bienvenues ! Pour contribuer, veuillez suivre ces étapes :
 
-### 📚 Support et documentation
-- Centre d'aide complet
-- Base de connaissances
-- FAQ et guides
-- Système de tickets
+1. Forkez le projet.
+2. Créez une nouvelle branche (`git checkout -b feature/YourFeature`).
+3. Apportez vos modifications et validez (`git commit -m 'Ajout d'une nouvelle fonctionnalité'`).
+4. Poussez vos modifications (`git push origin feature/YourFeature`).
+5. Ouvrez une Pull Request.
 
-## 🔧 Personnalisation
-
-### Couleurs du thème
-```css
-:root {
-  --cream: #faf7f2;
-  --rose-powder: #e8b4b8;
-  --magenta: #d63384;
-  --charcoal: #2d3748;
-}
-```
-
-### Ajout de nouvelles pages
-1. Créer le fichier dans le bon répertoire `app/`
-2. Utiliser les composants UI existants
-3. Respecter le design system
-4. Ajouter la navigation si nécessaire
-
-## 📊 Statistiques du projet
-
-- **26 pages créées** sur 140+ pages planifiées
-- **100% des pages d'authentification** terminées
-- **100% des pages d'administration** terminées
-- **100% des pages de support** terminées
-- **Design system cohérent** sur toutes les pages
-- **Code TypeScript** avec typage strict
-- **Responsive design** pour mobile et desktop
-
-## 🤝 Contribution
-
-1. Fork le projet
-2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
-3. Commit les changements (`git commit -m 'Add AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrir une Pull Request
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
-## 🆘 Support
-
-- **Documentation** : Consultez la base de connaissances intégrée
-- **Issues** : Ouvrez une issue sur GitHub
-- **Contact** : Utilisez le système de tickets intégré
-
----
-
-**Note** : Ce projet est en développement actif. Consultez le fichier `manquant.md` pour voir la liste complète des pages à implémenter.
-
-*README mis à jour par Manus AI - Janvier 2024*
-
+Nous apprécions toutes les contributions, qu'elles soient grandes ou petites !
