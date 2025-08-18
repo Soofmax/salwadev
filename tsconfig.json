@@ -35,6 +35,7 @@
   "include": [
     "next-env.d.ts",
     "next-auth.d.ts", // Ajout explicite pour être sûr à 100% qu'il est lu
+    "src/types/**/*.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts"
