@@ -53,9 +53,16 @@ export function ServicesSection(props: ServicesSectionProps) {
 
   return (
     <section className="py-20 bg-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {/* Motif/Pattern de fond */}
+        <div className="absolute inset-0 bg-cream pointer-events-none z-0" style={{
+          backgroundImage: `radial-gradient(circle, #ead2d8 2px, transparent 1px), radial-gradient(circle, #ead2d8 2px, transparent 1px)`,
+          backgroundSize: '28px 28px',
+          backgroundPosition: '0 0, 14px 14px',
+          opacity: 0.16
+        }} />
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-16 relative z-10">
           <div className="inline-flex items-center space-x-2 bg-rose-powder/20 rounded-full px-4 py-2 mb-6">
             <Sparkles className="w-4 h-4 text-magenta" />
             <span className="text-sm font-medium text-magenta">{badge}</span>
@@ -70,9 +77,13 @@ export function ServicesSection(props: ServicesSectionProps) {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {services.map((service) => (
-            <ServiceCard key={service.id} service={service} />
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {services.map((service, i) => (
+            <ServiceCard
+              key={service.id}
+              service={service}
+              className={`delay-${i * 100}`}
+            />
           ))}
         </div>
 
