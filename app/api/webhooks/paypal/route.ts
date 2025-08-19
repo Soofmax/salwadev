@@ -1,6 +1,4 @@
-// Stub for PayPal webhook
-import { NextRequest } from 'next/server';
-export async function POST(req: NextRequest) {
-  // TODO: implement PayPal webhook signature & order update
-  return new Response('PayPal webhook stub', { status: 200 });
+export async function POST(req: Request) {
+  // TODO: implémenter la gestion du webhook PayPal
+  return new Response("TODO PayPal Webhook", { status: 200 });
 }

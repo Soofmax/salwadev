@@ -1,6 +1,4 @@
-// Stub for Coinbase webhook
-import { NextRequest } from 'next/server';
-export async function POST(req: NextRequest) {
-  // TODO: implement Coinbase webhook signature & order update
-  return new Response('Coinbase webhook stub', { status: 200 });
+export async function POST(req: Request) {
+  // TODO: implémenter la gestion du webhook Coinbase Commerce
+  return new Response("TODO Coinbase Webhook", { status: 200 });
 }
