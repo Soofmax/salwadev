@@ -3,6 +3,7 @@ import { z } from "zod";
 import Stripe from "stripe";
 import { prisma } from "@/src/lib/prisma";
 import { allServices } from "@/lib/services-data";
+import { Client as CoinbaseClient } from "coinbase-commerce-node";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', { apiVersion: '2022-11-15' });
 
