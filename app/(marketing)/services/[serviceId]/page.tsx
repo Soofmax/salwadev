@@ -26,6 +26,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import PageContainer from '@/components/ui/PageContainer';
 import { JsonLd, createServiceSchema } from '@/components/seo/JsonLd';
+import { AddOnsSection } from '@/components/sections/AddOnsSection';
 
 // ============================================================================
 // 🧮 PARTIE 1: LOGIQUE DE DONNÉES
@@ -175,6 +176,9 @@ export default async function ServiceDetailPage({ params }: { params: { serviceI
   const heroImage = `/images/services/${service.id}-hero.jpg`;
   const CategoryIcon = getCategoryIcon(service.subCategory);
 
+  // Récupérer les add-ons liés à ce service via dependencies
+  const addOns = allServices.filter(s => service.dependencies?.includes(s.id));
+
   return (
     <PageContainer className="bg-cream min-h-screen pt-8 pb-16">
       {/* JSON-LD Service schema */}
@@ -266,6 +270,11 @@ export default async function ServiceDetailPage({ params }: { params: { serviceI
               Demander un devis
             </Link>
           </section>
+
+          {/* Add-ons Section */}
+          {addOns.length > 0 && (
+            <AddOnsSection addOns={addOns} serviceId={service.id} />
+          )}
         </main>
 
         {/* Illustration or Sidebar */}
