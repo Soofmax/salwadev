@@ -5,7 +5,6 @@
   
   # IMPORTANT: Définir explicitement le publish directory
   # pour override les paramètres de l'interface
-  publish = ".next"
 
 # Plugin officiel pour gérer les spécificités de Next.js
 [[plugins]]
