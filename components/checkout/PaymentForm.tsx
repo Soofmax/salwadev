@@ -1,66 +1,109 @@
-// Fichier: components/checkout/PaymentForm.tsx
-
 'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { CreditCard, Lock, ArrowRight } from 'lucide-react';
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
 
-interface PaymentFormProps {
-  planId: string;
-}
+const paymentFormSchema = z.object({
+  provider: z.enum(["stripe", "paypal", "coinbase"], { required_error: "Choisissez un moyen de paiement." }),
+  email: z.string().email("Email invalide."),
+  items: z.array(
+    z.object({
+      serviceId: z.string(),
+      addonIds: z.array(z.string()),
+      unitPrice: z.number().optional(),
+      quantity: z.number().optional(),
+    })
+  ),
+});
 
-export function PaymentForm({ planId }: PaymentFormProps) {
-  // La logique de soumission du formulaire sera étoffée plus tard
-  // pour interagir avec une API de paiement comme Stripe.
-  const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    console.log('Début du processus de paiement pour le plan :', planId);
-    // Ici, on appellera la logique pour créer un "Payment Intent"
-    // et soumettre les informations de la carte à Stripe.
-  };
+type PaymentFormValues = z.infer<typeof paymentFormSchema>;
+
+export function PaymentForm({ items }: { items: any[] }) {
+  const [serverError, setServerError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<PaymentFormValues>({
+    resolver: zodResolver(paymentFormSchema),
+    defaultValues: {
+      provider: "stripe",
+      email: "",
+      items,
+    },
+  });
+
+  async function onSubmit(data: PaymentFormValues) {
+    setServerError(null);
+    setLoading(true);
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+      const result = await res.json();
+      if (res.ok && result.url) {
+        window.location.href = result.url;
+      } else {
+        setServerError(result.error || "Erreur lors du paiement.");
+      }
+    } catch (e: any) {
+      setServerError(e.message || "Erreur inconnue.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   return (
-    <Card className="border-border/80 shadow-lg">
-      <CardHeader>
-        <CardTitle className="font-playfair text-2xl flex items-center">
-          <CreditCard className="mr-3 h-6 w-6 text-primary" />
-          Paiement Sécurisé
-        </CardTitle>
-        <CardDescription className="font-montserrat">
-          Vos informations sont chiffrées et ne sont jamais stockées sur nos serveurs.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* 
-            Cette div est un placeholder pour le composant Stripe Elements.
-            Elle sera remplacée par le formulaire de carte bancaire réel,
-            qui est injecté de manière sécurisée par la bibliothèque Stripe.
-          */}
-          <div className="border-2 border-dashed border-border/50 rounded-lg p-8 text-center bg-muted/40">
-            <h3 className="font-playfair text-xl font-semibold text-foreground">
-              Formulaire de paiement
-            </h3>
-            <p className="font-montserrat text-muted-foreground mt-2">
-              Le formulaire de carte bancaire sécurisé s'affichera ici.
-            </p>
-          </div>
-
-          <Button 
-            type="submit" 
-            size="lg" 
-            className="w-full bg-gradient-rose text-white shadow-rose-lg text-lg font-semibold py-6 transform hover:scale-105 transition-all duration-300"
-          >
-            Payer et s'abonner
-            <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-        </form>
-        <div className="mt-6 flex items-center justify-center text-sm text-muted-foreground font-montserrat">
-          <Lock className="h-4 w-4 mr-2" />
-          <span>Transactions sécurisées et chiffrées par Stripe.</span>
+    <form className="max-w-xl mx-auto space-y-8 pt-8" onSubmit={handleSubmit(onSubmit)}>
+      <fieldset className="mb-4">
+        <legend className="block mb-2 font-semibold text-charcoal">Choisissez un moyen de paiement</legend>
+        <div className="flex space-x-6">
+          <label className="flex items-center space-x-2">
+            <input type="radio" {...register("provider")} value="stripe" />
+            <span>Carte bancaire (Stripe)</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input type="radio" {...register("provider")} value="paypal" />
+            <span>PayPal</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input type="radio" {...register("provider")} value="coinbase" />
+            <span>Crypto (Coinbase)</span>
+          </label>
         </div>
-      </CardContent>
-    </Card>
+        {errors.provider && <div className="text-red-600 text-sm mt-2">{errors.provider.message}</div>}
+      </fieldset>
+
+      <div>
+        <label htmlFor="email" className="block font-medium mb-1 text-charcoal">
+          Email pour le reçu
+        </label>
+        <input
+          id="email"
+          type="email"
+          className="w-full border rounded px-4 py-2"
+          {...register("email")}
+        />
+        {errors.email && (
+          <div className="text-red-600 text-sm mt-1">{errors.email.message}</div>
+        )}
+      </div>
+
+      <input type="hidden" {...register('items')} value={JSON.stringify(items)} />
+
+      {serverError && <div className="text-red-600 text-center mb-4">{serverError}</div>}
+
+      <Button type="submit" size="lg" className="w-full bg-gradient-rose text-white" disabled={loading}>
+        {loading ? "Paiement en cours..." : "Payer"}
+      </Button>
+    </form>
   );
 }
