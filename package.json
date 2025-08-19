@@ -29,7 +29,7 @@
     "react-icons": "^5.2.0",
     "@radix-ui/react-alert-dialog": "^1.0.0",
     "@radix-ui/react-avatar": "^1.0.0",
-    "stripe": "^13.16.0"
+    "stripe": "^13.12.0"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.4.6",
