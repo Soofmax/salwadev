@@ -1,7 +1,7 @@
 'use client';
 
-import { useCart } from '@/hooks/useCart';
-import { useServices } from '@/hooks/useServices';
+import { useCart } from '@/src/hooks/useCart';
+import { useServices } from '@/src/hooks/useServices';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 

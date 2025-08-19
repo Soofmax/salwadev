@@ -27,7 +27,7 @@ import { JsonLd, createServiceSchema } from '@/components/seo/JsonLd';
 import LoadingServicePage from './loading';
 import Error from './error';
 import { useCart } from '@/src/hooks/useCart';
-import { useServices } from '@/hooks/useServices';
+import { useServices } from '@/src/hooks/useServices';
 import { useState } from 'react';
 
 // ============================================================================

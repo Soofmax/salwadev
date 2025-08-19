@@ -2,19 +2,14 @@
 'use client';
 
 import Link from 'next/link';
-import type { Metadata } from 'next';
-import { useServices } from '@/hooks/useServices';
+import { useServices } from '@/src/hooks/useServices';
 
 // Imports des composants
 import CatalogueLoader from '@/components/sections/CatalogueLoader';
 import { Check, Gift } from 'lucide-react';
 
 // --- SEO Metadata ---
-export const metadata: Metadata = {
-  title: 'Services Web & Développement Digital | Packs et Solutions sur-Mesure',
-  description:
-    'Découvrez nos packs web professionnels et nos +30 services spécialisés : SEO, IA, Web3, PWA. Devis gratuit.',
-};
+// (retiré, SEO metadata handled elsewhere or can be added in a layout if needed)
 
 // --- Logique de création des Packs ---
 // Ce code doit être déplacé dans le rendu (après chargement), car il dépend des données chargées dynamiquement.
