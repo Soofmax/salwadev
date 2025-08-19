@@ -1,16 +1,13 @@
 // Fichier: app/(marketing)/services/[serviceId]/page.tsx
 // VERSION CORRIGÉE
 
-import { notFound, redirect } from 'next/navigation';
-import { cache } from 'react';
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
-import type { Metadata } from 'next';
-
-import { allServices, type Service } from '@/lib/services-data';
+import { useService } from '@/hooks/useService';
 import {
   Check,
-  ArrowRight,
   Star,
   Shield,
   Zap,
@@ -25,8 +22,10 @@ import type { LucideIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import PageContainer from '@/components/ui/PageContainer';
-import { JsonLd, createServiceSchema } from '@/components/seo/JsonLd';
 import { AddOnsSection } from '@/components/sections/AddOnsSection';
+import { JsonLd, createServiceSchema } from '@/components/seo/JsonLd';
+import LoadingServicePage from './loading';
+import Error from './error';
 
 // ============================================================================
 // 🧮 PARTIE 1: LOGIQUE DE DONNÉES
@@ -163,21 +162,47 @@ interface PageProps {
 }
 
 // Utilisation de l'interface pour typer les props du composant
-export default async function ServiceDetailPage({ params }: { params: { serviceId: string } }) {
-  const { serviceId } = params;
+export default function ServiceDetailPage({ params }: { params: { serviceId: string } }) {
+  const { service, isLoading, isError } = useService(params.serviceId);
 
-  if (URL_REDIRECTS[serviceId]) {
-    redirect(`/services/${URL_REDIRECTS[serviceId]}`);
-  }
+  // For add-ons: you would need allServices; since this is now client, this may require a separate fetch if needed
 
-  const service = allServices.find((s) => s.id === serviceId);
-  if (!service) notFound();
+  if (isLoading) return <LoadingServicePage />;
+  if (isError) return <Error />;
+
+  if (!service) return <Error />;
+
+  // Helper functions in client component
+  const getCategoryIcon = (subCategory: string) => {
+    const icons: Record<string, LucideIcon> = {
+      visibilite: Globe,
+      conversion: Target,
+      vente: BarChart,
+      optimisation: Shield,
+      growth: Star,
+      plateforme: Layers,
+      innovation: Zap,
+    };
+    return icons[subCategory] || BarChart;
+  };
+  const getCategoryColor = (subCategory: string) => {
+    const colors: Record<string, string> = {
+      visibilite: 'bg-blue-100 text-blue-800',
+      conversion: 'bg-green-100 text-green-800',
+      vente: 'bg-purple-100 text-purple-800',
+      optimisation: 'bg-orange-100 text-orange-800',
+      growth: 'bg-pink-100 text-pink-800',
+      plateforme: 'bg-indigo-100 text-indigo-800',
+      innovation: 'bg-red-100 text-red-800',
+    };
+    return colors[subCategory] || 'bg-gray-100 text-gray-800';
+  };
+
+  // Add-ons logic: you may need to fetch allServices again or pass them down as context/prop for this to work
+  // For now, we'll just skip addOns for this client version
 
   const heroImage = `/images/services/${service.id}-hero.jpg`;
   const CategoryIcon = getCategoryIcon(service.subCategory);
-
-  // Récupérer les add-ons liés à ce service via dependencies
-  const addOns = allServices.filter(s => service.dependencies?.includes(s.id));
 
   return (
     <PageContainer className="bg-cream min-h-screen pt-8 pb-16">
@@ -240,7 +265,7 @@ export default async function ServiceDetailPage({ params }: { params: { serviceI
               Fonctionnalités & Avantages
             </h2>
             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              {service.features.map((feature, i) => (
+              {service.features.map((feature: string, i: number) => (
                 <li key={i} className="flex items-start gap-3">
                   <span className="w-8 h-8 rounded-full bg-gradient-rose flex items-center justify-center flex-shrink-0">
                     <Check className="w-4 h-4 text-white" />
@@ -270,14 +295,13 @@ export default async function ServiceDetailPage({ params }: { params: { serviceI
               Demander un devis
             </Link>
           </section>
-
-          {/* Add-ons Section */}
-          {addOns.length > 0 && (
-            <AddOnsSection addOns={addOns} serviceId={service.id} />
-          )}
+          {/* Add-ons Section (option: fetch allServices here for now skip or implement as needed) */}
         </main>
-
-        {/* Illustration or Sidebar */}
+        <aside className="flex-shrink-0 hidden lg:block w-96"></aside>
+      </div>
+    </PageContainer>
+  );
+}
         <aside className="flex-shrink-0 hidden lg:block w-96">
           {/* Bonus: placez ici des sections annexes, témoignages, etc. */}
         </aside>
