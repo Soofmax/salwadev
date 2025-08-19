@@ -26,7 +26,7 @@ import { AddOnsSection } from '@/components/sections/AddOnsSection';
 import { JsonLd, createServiceSchema } from '@/components/seo/JsonLd';
 import LoadingServicePage from './loading';
 import Error from './error';
-import { useCart } from '@/hooks/useCart';
+import { useCart } from '@/src/hooks/useCart';
 import { useServices } from '@/hooks/useServices';
 import { useState } from 'react';
 
