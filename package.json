@@ -31,10 +31,12 @@
     "@radix-ui/react-avatar": "^1.0.0",
     "stripe": "^13.16.0",
     "paypal-rest-sdk": "^2.0.1",
-    "coinbase-commerce-node": "^1.4.0"
+    "coinbase-commerce-node": "^1.4.0",
+    "@types/coinbase-commerce-node": "^1.0.9"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.4.6",
+    "@types/coinbase-commerce-node": "^1.0.9"
     "@typescript-eslint/eslint-plugin": "^8.39.1",
     "@typescript-eslint/parser": "^8.39.1",
     "eslint": "^9.33.0",
