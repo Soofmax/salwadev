@@ -60,24 +60,16 @@ export function useAuth() {
 }
 
 import { CartProvider } from '@/context/CartContext';
+import { SessionProvider } from "next-auth/react";
 
 export function Providers({ children }: { children: ReactNode }) {
   // ...auth context logic remains unchanged above...
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        signIn,
-        signUp,
-        signOut,
-        connectWallet,
-        isLoading,
-      }}
-    >
+    <SessionProvider>
       <CartProvider>
         {children}
       </CartProvider>
-    </AuthContext.Provider>
+    </SessionProvider>
   );
 }

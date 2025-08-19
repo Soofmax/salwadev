@@ -30,10 +30,20 @@ export async function GET(
   return Response.json(service, { status: 200 });
 }
 
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../../auth/[...nextauth]/route";
+
 export async function PUT(
   req: NextRequest,
   { params }: { params: { serviceId: string } }
 ) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return Response.json({ error: "Non authentifié" }, { status: 401 });
+  }
+  if (session.user.role !== "admin") {
+    return Response.json({ error: "Non autorisé" }, { status: 403 });
+  }
   try {
     const body = await req.json();
     const updated = serviceSchema.parse({ ...body, id: params.serviceId });
@@ -50,6 +60,13 @@ export async function DELETE(
   req: NextRequest,
   { params }: { params: { serviceId: string } }
 ) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return Response.json({ error: "Non authentifié" }, { status: 401 });
+  }
+  if (session.user.role !== "admin") {
+    return Response.json({ error: "Non autorisé" }, { status: 403 });
+  }
   const idx = allServices.findIndex((s) => s.id === params.serviceId);
   if (idx === -1) return Response.json({ error: 'Not found' }, { status: 404 });
   allServices.splice(idx, 1);

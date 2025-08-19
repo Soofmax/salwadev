@@ -24,7 +24,17 @@ export async function GET() {
   return Response.json(allServices, { status: 200 });
 }
 
+import { getServerSession } from "next-auth/next";
+import { authOptions } from "../auth/[...nextauth]/route";
+
 export async function POST(req: NextRequest) {
+  const session = await getServerSession(authOptions);
+  if (!session) {
+    return Response.json({ error: "Non authentifié" }, { status: 401 });
+  }
+  if (session.user.role !== "admin") {
+    return Response.json({ error: "Non autorisé" }, { status: 403 });
+  }
   try {
     const body = await req.json();
     const result = serviceSchema.parse(body);
