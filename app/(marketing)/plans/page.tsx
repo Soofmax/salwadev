@@ -164,7 +164,7 @@ const additionalServices = [
   }
 ];
 
-import { PageContainer } from '@/components/PageContainer';
+import PageContainer from '@/components/ui/PageContainer';
 export default function PlansPage() {
   return (
     <PageContainer className="bg-cream min-h-screen py-24 sm:py-32">

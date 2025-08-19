@@ -18,8 +18,10 @@ export async function POST(req: Request) {
     }
     const user = await userService.createUser({ name, email, role });
     return Response.json(user, { status: 201 });
-  } catch (error: any) {
-    if (error.code === "P2002") {
+  } catch (error: unknown) {
+    // @ts-expect-error: Prisma import for error codes
+    const { Prisma } = await import('@prisma/client');
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
       return Response.json({ error: "Email already exists" }, { status: 400 });
     }
     return Response.json({ error: "Server error" }, { status: 500 });

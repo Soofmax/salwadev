@@ -53,8 +53,11 @@ interface NotificationSettings {
 }
 
 export default function NotificationsPage() {
-  const [activeTab, setActiveTab] = useState<'all' | 'unread' | 'settings'>('all');
-  const [filter, setFilter] = useState<'all' | 'message' | 'order' | 'system' | 'security'>('all');
+  type TabId = 'all' | 'unread' | 'settings';
+  type Filter = 'all' | 'message' | 'order' | 'system' | 'security';
+  import type { LucideIcon } from 'lucide-react';
+  const [activeTab, setActiveTab] = useState<TabId>('all');
+  const [filter, setFilter] = useState<Filter>('all');
   const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
 
   const [notificationSettings, setNotificationSettings] = useState<Record<string, NotificationSettings>>({
@@ -180,6 +183,15 @@ export default function NotificationsPage() {
     }
   };
 
+  const tabs: { id: TabId; label: string; icon: LucideIcon }[] = [
+    { id: 'all', label: `Toutes (${notifications.length})`, icon: Bell },
+    { id: 'unread', label: `Non lues (${unreadCount})`, icon: Eye },
+    { id: 'settings', label: 'Paramètres', icon: Settings }
+  ];
+
+  const isFilter = (v: string): v is Filter =>
+    ['all','message','order','system','security'].includes(v);
+
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'high':
@@ -241,27 +253,23 @@ export default function NotificationsPage() {
 
         {/* Tabs */}
         <div className="flex space-x-1 bg-white rounded-lg p-1 shadow-lg">
-          {[
-            { id: 'all', label: `Toutes (${notifications.length})`, icon: Bell },
-            { id: 'unread', label: `Non lues (${unreadCount})`, icon: Eye },
-            { id: 'settings', label: 'Paramètres', icon: Settings }
-          ].map((tab) => {
-            const Icon = tab.icon;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
-                  activeTab === tab.id
-                    ? 'bg-magenta text-white'
-                    : 'text-charcoal hover:bg-rose-powder/20'
-                }`}
-              >
-                <Icon className="w-4 h-4" />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
+          {tabs.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-colors ${
+                    activeTab === tab.id
+                      ? 'bg-magenta text-white'
+                      : 'text-charcoal hover:bg-rose-powder/20'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  <span>{tab.label}</span>
+                </button>
+              );
+            })}
         </div>
 
         {/* Content */}
@@ -330,7 +338,10 @@ export default function NotificationsPage() {
                   <div className="flex items-center space-x-4">
                     <select
                       value={filter}
-                      onChange={(e) => setFilter(e.target.value as any)}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        if (isFilter(v)) setFilter(v);
+                      }}
                       className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-magenta focus:outline-none"
                     >
                       <option value="all">Tous les types</option>

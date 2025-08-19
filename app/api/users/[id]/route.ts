@@ -23,8 +23,10 @@ export async function PUT(
     const body = await req.json();
     const user = await userService.updateUser(params.id, body);
     return Response.json(user, { status: 200 });
-  } catch (error: any) {
-    if (error.code === "P2025") {
+  } catch (error: unknown) {
+    // @ts-expect-error: Prisma import for error codes
+    const { Prisma } = await import('@prisma/client');
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
       return Response.json({ error: "User not found" }, { status: 404 });
     }
     return Response.json({ error: "Server error" }, { status: 500 });
@@ -38,8 +40,10 @@ export async function DELETE(
   try {
     const user = await userService.deleteUser(params.id);
     return Response.json(user, { status: 200 });
-  } catch (error: any) {
-    if (error.code === "P2025") {
+  } catch (error: unknown) {
+    // @ts-expect-error: Prisma import for error codes
+    const { Prisma } = await import('@prisma/client');
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
       return Response.json({ error: "User not found" }, { status: 404 });
     }
     return Response.json({ error: "Server error" }, { status: 500 });

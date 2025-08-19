@@ -70,7 +70,9 @@ interface Category {
 export default function KnowledgeBasePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<'recent' | 'popular' | 'helpful'>('recent');
+  type SortBy = 'recent' | 'popular' | 'helpful';
+  const [sortBy, setSortBy] = useState<SortBy>('recent');
+  const isSortBy = (v: string): v is SortBy => ['recent','popular','helpful'].includes(v);
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [difficultyFilter, setDifficultyFilter] = useState<string>('all');
 
@@ -514,7 +516,10 @@ export default function KnowledgeBasePage() {
                 
                 <select
                   value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    if (isSortBy(v)) setSortBy(v);
+                  }}
                   className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:border-magenta focus:outline-none"
                 >
                   <option value="recent">Plus récents</option>

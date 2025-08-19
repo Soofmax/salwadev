@@ -37,7 +37,7 @@ interface LogEntry {
   userId?: string;
   ip?: string;
   userAgent?: string;
-  details?: Record<string, any>;
+  details?: Record<string, unknown>;
 }
 
 export default function SystemLogs() {

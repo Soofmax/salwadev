@@ -130,11 +130,12 @@ export function Providers({ children }: { children: ReactNode }) {
   const connectWallet = async () => {
     try {
       // Simulate wallet connection
-      if (typeof window !== 'undefined' && (window as any).ethereum) {
-        const accounts = await (window as any).ethereum.request({
+      if (typeof window !== 'undefined' && window.ethereum) {
+        const result = await window.ethereum.request({
           method: 'eth_requestAccounts',
         });
-        if (user) {
+        const accounts = Array.isArray(result) ? (result as string[]) : [];
+        if (user && accounts.length > 0) {
           setUser({
             ...user,
             walletAddress: accounts[0],

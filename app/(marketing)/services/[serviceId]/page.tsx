@@ -23,6 +23,7 @@ import {
   Layers,
   BarChart,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 // Imports des composants UI
 import { Badge } from '@/components/ui/badge';
@@ -132,7 +133,7 @@ export async function generateMetadata({
 // ============================================================================
 
 const getCategoryIcon = (subCategory: string) => {
-  const icons: Record<string, any> = {
+  const icons: Record<string, LucideIcon> = {
     visibilite: Globe,
     conversion: Target,
     vente: BarChart,
