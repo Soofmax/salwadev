@@ -16,7 +16,7 @@ import { Check, Gift } from 'lucide-react';
 
 
 // --- Composant Principal de la Page ---
-import PageContainer from '@/components/ui/PageContainer';
+import PageContainer from '@/src/components/ui/PageContainer';
 
 export default function ServicesPage() {
   const { services, isLoading, isError } = useServices();

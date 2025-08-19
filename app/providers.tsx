@@ -59,7 +59,7 @@ export function useAuth() {
   return context;
 }
 
-import { CartProvider } from '@/context/CartContext';
+import { CartProvider } from '@/src/context/CartContext';
 import { SessionProvider } from "next-auth/react";
 
 export function Providers({ children }: { children: ReactNode }) {

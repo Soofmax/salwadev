@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import PageContainer from '@/components/ui/PageContainer';
+import PageContainer from '@/src/components/ui/PageContainer';
 
 export default function Error({
   error,
