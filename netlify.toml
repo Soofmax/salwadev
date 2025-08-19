@@ -1,8 +1,7 @@
 # Fichier de configuration pour Netlify
 [build]
   command = "npx netlify db init && npm run build"
-  # Commande pour construire le site
-  command = "next build"
+  publish = ".next"
   
   # IMPORTANT: Définir explicitement le publish directory
   # pour override les paramètres de l'interface
