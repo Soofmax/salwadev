@@ -7,10 +7,15 @@ export default function CheckoutPage() {
   const { items } = useCart();
 
   // Calcul du total
+  // Calcul du total en incluant le prix des services et des add-ons
   const total = items.reduce((sum, item) => {
-    const service = { unitPrice: 0, quantity: 1, ...item }; // Adapter si pricing réel dispo
-    const addonsTotal = (item.addonIds || []).length * 0; // Adapter si addons pricing connu
-    return sum + (service.unitPrice * service.quantity) + addonsTotal;
+    // Prix du service principal
+    const serviceTotal = (item.unitPrice || 0) * (item.quantity || 1);
+    // Prix des add-ons si fournis
+    const addonsTotal = Array.isArray(item.addons)
+      ? item.addons.reduce((a, addon) => a + (addon.unitPrice || 0), 0)
+      : 0;
+    return sum + serviceTotal + addonsTotal;
   }, 0);
 
   return (
