@@ -1,69 +1,76 @@
-// Fichier: components/checkout/OrderSummary.tsx
+import React from "react";
 
-'use client';
-
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { ShoppingBag } from 'lucide-react';
-
-interface OrderSummaryProps {
-  planId: string;
+export interface OrderSummaryProps {
+  items: {
+    serviceId: string;
+    addonIds?: string[];
+    unitPrice: number;
+    quantity: number;
+  }[];
+  total: number;
 }
 
-// Données simulées. Dans une application réelle, tu les importerais
-// d'un fichier de configuration central (ex: `lib/plans-data.ts`).
-const planDetails: { [key: string]: { name: string; price: number | null } } = {
-  plan_free: { name: 'Plan Essentiel', price: 0 },
-  plan_pro: { name: 'Plan Pro', price: 29 },
-  plan_enterprise: { name: 'Plan Entreprise', price: null },
-};
-
-export function OrderSummary({ planId }: OrderSummaryProps) {
-  const selectedPlan = planDetails[planId] || null;
-
-  // Gestion du cas où le planId n'est pas valide.
-  if (!selectedPlan) {
-    return (
-      <Card className="sticky top-24 border-destructive">
-        <CardHeader>
-          <CardTitle className="font-playfair text-destructive">Erreur de commande</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="font-montserrat">Le plan sélectionné est invalide. Veuillez réessayer.</p>
-        </CardContent>
-      </Card>
-    );
-  }
-
+export function OrderSummary({ items, total }: OrderSummaryProps) {
   return (
-    <Card className="sticky top-24 border-border/80 shadow-lg bg-card/80 backdrop-blur-sm">
-      <CardHeader>
-        <CardTitle className="font-playfair text-2xl flex items-center">
-          <ShoppingBag className="mr-3 h-6 w-6 text-primary" />
-          Récapitulatif
-        </CardTitle>
-        <CardDescription className="font-montserrat">Votre commande en un coup d'œil.</CardDescription>
-      </CardHeader>
-      <CardContent className="font-montserrat space-y-4">
-        <div className="flex justify-between items-center">
-          <span className="text-muted-foreground">Abonnement</span>
-          <span className="font-semibold">{selectedPlan.name}</span>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-muted-foreground">Fréquence</span>
-          <span className="font-semibold">Mensuel</span>
-        </div>
-        <Separator className="my-4" />
-        <div className="flex justify-between items-center">
-          <span className="font-semibold text-lg">Total (TTC)</span>
-          <span className="font-playfair font-bold text-3xl text-primary">
-            {selectedPlan.price !== null ? `${selectedPlan.price}€` : 'Sur devis'}
-          </span>
-        </div>
-        <div className="text-xs text-muted-foreground pt-4">
-          Vous serez facturé mensuellement. Vous pouvez annuler votre abonnement à tout moment depuis votre espace de facturation.
-        </div>
-      </CardContent>
-    </Card>
+    <div className="overflow-x-auto rounded-xl border border-cream bg-white shadow">
+      <table className="min-w-full divide-y divide-cream">
+        <thead>
+          <tr className="bg-rose-powder/10">
+            <th className="px-4 py-3 text-left text-xs font-semibold text-charcoal uppercase">
+              Service/Add-ons
+            </th>
+            <th className="px-4 py-3 text-right text-xs font-semibold text-charcoal uppercase">
+              Quantité
+            </th>
+            <th className="px-4 py-3 text-right text-xs font-semibold text-charcoal uppercase">
+              Prix unitaire
+            </th>
+            <th className="px-4 py-3 text-right text-xs font-semibold text-charcoal uppercase">
+              Sous-total
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-cream">
+          {items.map((item, i) => (
+            <tr key={i} className="hover:bg-rose-powder/5">
+              <td className="px-4 py-3">
+                <div className="font-medium text-charcoal">{item.serviceId}</div>
+                {item.addonIds && item.addonIds.length > 0 && (
+                  <div className="text-xs text-charcoal/60 mt-1">
+                    + {item.addonIds.join(", ")}
+                  </div>
+                )}
+              </td>
+              <td className="px-4 py-3 text-right">{item.quantity}</td>
+              <td className="px-4 py-3 text-right">
+                {item.unitPrice.toLocaleString("fr-FR", {
+                  style: "currency",
+                  currency: "EUR",
+                })}
+              </td>
+              <td className="px-4 py-3 text-right font-semibold">
+                {(item.unitPrice * item.quantity).toLocaleString("fr-FR", {
+                  style: "currency",
+                  currency: "EUR",
+                })}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colSpan={3} className="px-4 py-4 text-right font-bold text-charcoal">
+              Total
+            </td>
+            <td className="px-4 py-4 text-right font-bold text-magenta text-lg">
+              {total.toLocaleString("fr-FR", {
+                style: "currency",
+                currency: "EUR",
+              })}
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
   );
 }
