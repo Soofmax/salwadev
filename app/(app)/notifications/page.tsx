@@ -29,6 +29,7 @@ import {
   Eye,
   EyeOff
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface Notification {
   id: string;

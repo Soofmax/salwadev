@@ -58,26 +58,14 @@ export function useConsentTracking() {
         );
       }
     },
-    [consent.analytics] // La fonction ne sera recréée que si `consent.analytics` change.
+    [consent.analytics]
   );
 
   return {
     hasAnalyticsConsent: consent.analytics,
     trackEvent,
   };
-}
- */
-export function useConsentTracking() {
-  const [consent, setConsent] = useState<Consent>(defaultConsent);
-
-  // useEffect pour lire le consentement depuis le localStorage au montage du composant.
-  useEffect(() => {
-    const savedConsentRaw = localStorage.getItem(CONSENT_STORAGE_KEY);
-    if (savedConsentRaw) {
-      try {
-        const savedConsent = JSON.parse(savedConsentRaw) as Consent;
-        setConsent(savedConsent);
-      } catch (error) {
+} catch (error) {
         console.error('Failed to parse consent from localStorage', error);
         setConsent(defaultConsent);
       }
