@@ -30,7 +30,7 @@
     "@radix-ui/react-alert-dialog": "^1.0.0",
     "@radix-ui/react-avatar": "^1.0.0",
     "stripe": "^13.16.0",
-    "paypal-rest-sdk": "^2.0.1"
+    // "paypal-rest-sdk" removed due to missing version; integrate official PayPal SDK later
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.4.6",
