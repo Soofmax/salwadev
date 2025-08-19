@@ -26,6 +26,9 @@ import { AddOnsSection } from '@/components/sections/AddOnsSection';
 import { JsonLd, createServiceSchema } from '@/components/seo/JsonLd';
 import LoadingServicePage from './loading';
 import Error from './error';
+import { useCart } from '@/hooks/useCart';
+import { useServices } from '@/hooks/useServices';
+import { useState } from 'react';
 
 // ============================================================================
 // 🧮 PARTIE 1: LOGIQUE DE DONNÉES
@@ -165,51 +168,40 @@ interface PageProps {
 export default function ServiceDetailPage({ params }: { params: { serviceId: string } }) {
   const { service, isLoading, isError } = useService(params.serviceId);
 
-  // For add-ons: you would need allServices; since this is now client, this may require a separate fetch if needed
+  const { services } = useServices();
+  const { addItem } = useCart();
+  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
 
   if (isLoading) return <LoadingServicePage />;
   if (isError) return <Error />;
-
   if (!service) return <Error />;
 
-  // Helper functions in client component
-  const getCategoryIcon = (subCategory: string) => {
-    const icons: Record<string, LucideIcon> = {
-      visibilite: Globe,
-      conversion: Target,
-      vente: BarChart,
-      optimisation: Shield,
-      growth: Star,
-      plateforme: Layers,
-      innovation: Zap,
-    };
-    return icons[subCategory] || BarChart;
-  };
-  const getCategoryColor = (subCategory: string) => {
-    const colors: Record<string, string> = {
-      visibilite: 'bg-blue-100 text-blue-800',
-      conversion: 'bg-green-100 text-green-800',
-      vente: 'bg-purple-100 text-purple-800',
-      optimisation: 'bg-orange-100 text-orange-800',
-      growth: 'bg-pink-100 text-pink-800',
-      plateforme: 'bg-indigo-100 text-indigo-800',
-      innovation: 'bg-red-100 text-red-800',
-    };
-    return colors[subCategory] || 'bg-gray-100 text-gray-800';
-  };
-
-  // Add-ons logic: you may need to fetch allServices again or pass them down as context/prop for this to work
-  // For now, we'll just skip addOns for this client version
+  // Find compatible add-ons (services whose id is in service.dependencies)
+  const addOns = (services && service.dependencies)
+    ? services.filter((s: any) => service.dependencies.includes(s.id))
+    : [];
 
   const heroImage = `/images/services/${service.id}-hero.jpg`;
   const CategoryIcon = getCategoryIcon(service.subCategory);
 
+  // Handle add-on toggle
+  const handleToggleAddon = (addOnId: string) => {
+    setSelectedAddons((prev) =>
+      prev.includes(addOnId)
+        ? prev.filter((id) => id !== addOnId)
+        : [...prev, addOnId]
+    );
+  };
+
+  const handleAddToCart = () => {
+    addItem(service.id, selectedAddons, addOns.map((a: any) => a.id));
+    // Optionally redirect or show toast
+    window.location.href = '/cart';
+  };
+
   return (
     <PageContainer className="bg-cream min-h-screen pt-8 pb-16">
-      {/* JSON-LD Service schema */}
       <JsonLd data={createServiceSchema(service)} />
-
-      {/* Breadcrumb */}
       <nav aria-label="Breadcrumb" className="mb-8">
         <ol className="flex items-center space-x-2 text-sm text-charcoal/60">
           <li><Link href="/" className="hover:text-magenta">Accueil</Link></li>
@@ -221,9 +213,7 @@ export default function ServiceDetailPage({ params }: { params: { serviceId: str
       </nav>
 
       <div className="flex flex-col lg:flex-row gap-12">
-        {/* Main Content */}
         <main className="flex-1 space-y-10">
-          {/* Header */}
           <header>
             <div className="flex flex-col md:flex-row md:items-center gap-6 mb-8">
               <div className="relative w-full md:w-80 aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-rose-powder/20 to-magenta/10 shadow-lg">
@@ -258,8 +248,6 @@ export default function ServiceDetailPage({ params }: { params: { serviceId: str
               {service.description}
             </p>
           </header>
-
-          {/* Features / Advantages */}
           <section>
             <h2 className="text-2xl font-bold text-charcoal mb-5">
               Fonctionnalités & Avantages
@@ -283,19 +271,44 @@ export default function ServiceDetailPage({ params }: { params: { serviceId: str
             )}
           </section>
 
+          {/* Add-ons selection */}
+          {addOns.length > 0 && (
+            <section>
+              <h2 className="text-xl font-bold text-charcoal mb-4">Extensions & options complémentaires</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                {addOns.map((addOn: any) => (
+                  <label
+                    key={addOn.id}
+                    className={`flex items-center bg-white rounded-lg shadow p-4 cursor-pointer hover:bg-rose-powder/10 transition-all ${
+                      selectedAddons.includes(addOn.id) ? 'ring-2 ring-magenta' : ''
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedAddons.includes(addOn.id)}
+                      onChange={() => handleToggleAddon(addOn.id)}
+                      className="accent-magenta w-5 h-5 mr-3"
+                    />
+                    <div>
+                      <div className="font-semibold text-charcoal">{addOn.name}</div>
+                      <div className="text-charcoal/70 text-sm">{addOn.description}</div>
+                      <div className="font-semibold text-magenta mt-1">+{addOn.price}€</div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </section>
+          )}
+
           {/* CTA */}
           <section>
-            <Link
-              href={`/contact?serviceId=${service.id}`}
-              className="inline-block bg-gradient-rose hover:opacity-90 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg transition-all duration-300"
-              itemProp="potentialAction"
-              itemScope
-              itemType="http://schema.org/ContactAction"
+            <Button
+              className="bg-gradient-rose hover:opacity-90 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg transition-all duration-300"
+              onClick={handleAddToCart}
             >
-              Demander un devis
-            </Link>
+              Ajouter au panier
+            </Button>
           </section>
-          {/* Add-ons Section (option: fetch allServices here for now skip or implement as needed) */}
         </main>
         <aside className="flex-shrink-0 hidden lg:block w-96"></aside>
       </div>
