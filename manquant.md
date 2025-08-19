@@ -272,3 +272,19 @@ Crée d'abord les dossiers + fichiers vides pour chaque page, puis implémente-l
 
 ---
 
+## Pages de l’application
+- app/(app)/checkout/page.tsx — Tunnel de commande
+- app/(app)/checkout/success/page.tsx — Confirmation paiement
+- app/(app)/checkout/cancelled/page.tsx — Paiement annulé
+- app/(app)/pricing/page.tsx — Plans & tarifs
+- app/(app)/billing/page.tsx — Gestion facturation
+- app/(app)/billing/invoices/page.tsx — Historique factures
+- app/(app)/billing/payment-methods/page.tsx — CB & moyens paiement
+
+## Configuration Neon & Prisma
+- Extension Neon installée via Netlify UI / `npx netlify db init`
+- Variables d’environnement `DATABASE_URL`, `SHADOW_DATABASE_URL`
+- `prisma/schema.prisma` includes `shadowDatabaseUrl`
+- Script `postinstall` pour initialiser Neon
+- Build Netlify préfixé par `npx netlify db init && npm run build`
+
