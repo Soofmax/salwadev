@@ -34,10 +34,10 @@ export function OrderSummary({ items, total }: OrderSummaryProps) {
           {items.map((item, i) => (
             <tr key={i} className="hover:bg-rose-powder/5">
               <td className="px-4 py-3">
-                <div className="font-medium text-charcoal">{item.serviceId}</div>
-                {item.addonIds && item.addonIds.length > 0 && (
+                <div className="font-medium text-charcoal">{item.serviceName || item.serviceId}</div>
+                {item.addons && item.addons.length > 0 && (
                   <div className="text-xs text-charcoal/60 mt-1">
-                    + {item.addonIds.join(", ")}
+                    + {item.addons.map((addon: any) => addon.addonName || addon.id).join(", ")}
                   </div>
                 )}
               </td>
@@ -49,7 +49,7 @@ export function OrderSummary({ items, total }: OrderSummaryProps) {
                 })}
               </td>
               <td className="px-4 py-3 text-right font-semibold">
-                {(item.unitPrice * item.quantity).toLocaleString("fr-FR", {
+                {(item.unitPrice * item.quantity + (item.addons?.reduce((a: number, addon: any) => a + addon.unitPrice, 0) || 0)).toLocaleString("fr-FR", {
                   style: "currency",
                   currency: "EUR",
                 })}
