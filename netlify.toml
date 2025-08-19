@@ -1,6 +1,6 @@
 # Fichier de configuration pour Netlify
 [build]
-  command = "npm install --legacy-peer-deps --force && npm run build"
+  command = "npx netlify db init && npm install --legacy-peer-deps --force && npm run build"
   publish = ".next"
   
   # IMPORTANT: Définir explicitement le publish directory
