@@ -15,3 +15,15 @@ model User {
   role      String
   createdAt DateTime @default(now())
 }
+
+model Order {
+  id         String   @id @default(cuid())
+  userId     String?  // null si guest
+  items      Json
+  total      Float
+  status     String   // e.g. PENDING, PAID, CANCELLED
+  provider   String   // stripe, paypal, coinbase
+  providerId String?  // session id ou charge id
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
