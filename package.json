@@ -29,7 +29,6 @@
     "react-icons": "^5.2.0",
     "@radix-ui/react-alert-dialog": "^1.0.0",
     "@radix-ui/react-avatar": "^1.0.0",
-    "class-variance-authority": "^0.6.3",
     "stripe": "^13.16.0",
     "paypal-rest-sdk": "^2.0.1",
     "coinbase-commerce-node": "^1.4.2"
