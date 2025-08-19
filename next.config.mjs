@@ -27,9 +27,7 @@ const nextConfig = {
   // Configuration expérimentale pour l'optimisation
   experimental: {
     optimizeCss: true,
-    optimizeFonts: false,
     optimizePackageImports: ['lucide-react', '@radix-ui/react-icons'],
-    serverExternalPackages: [],
   },
 
   // Configuration du compilateur
