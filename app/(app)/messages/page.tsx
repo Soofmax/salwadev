@@ -61,7 +61,9 @@ export default function MessagesPage() {
   const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [filter, setFilter] = useState<'all' | 'unread' | 'starred' | 'archived'>('all');
+  type MsgFilter = 'all' | 'unread' | 'starred' | 'archived';
+  const [filter, setFilter] = useState<MsgFilter>('all');
+  const isMsgFilter = (v: string): v is MsgFilter => ['all','unread','starred','archived'].includes(v);
 
   // Données factices pour les conversations
   const conversations: Conversation[] = [
@@ -239,7 +241,10 @@ export default function MessagesPage() {
                 <div className="flex items-center space-x-2">
                   <select
                     value={filter}
-                    onChange={(e) => setFilter(e.target.value as any)}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      if (isMsgFilter(v)) setFilter(v);
+                    }}
                     className="text-xs px-2 py-1 border border-gray-300 rounded focus:border-magenta focus:outline-none"
                   >
                     <option value="all">Toutes</option>

@@ -1,19 +1,13 @@
 // Fichier: app/(marketing)/services/[serviceId]/page.tsx
 // VERSION CORRIGÉE
 
-import { notFound, redirect } from 'next/navigation';
-import { cache } from 'react';
+'use client';
+
 import Link from 'next/link';
 import Image from 'next/image';
-import type { Metadata } from 'next';
-
-// Imports des données et types
-import { allServices, type Service } from '@/lib/services-data';
-
-// Imports des icônes
+import { useService } from '@/hooks/useService';
 import {
   Check,
-  ArrowRight,
   Star,
   Shield,
   Zap,
@@ -23,15 +17,18 @@ import {
   Layers,
   BarChart,
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
-// Imports des composants UI
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-
-// Imports des composants de la page
-import { ServiceDetailActions } from '@/components/services/ServiceDetailActions';
-import { Sidebar } from '@/components/layout/Sidebar';
+import PageContainer from '@/components/ui/PageContainer';
+import { AddOnsSection } from '@/components/sections/AddOnsSection';
+import { JsonLd, createServiceSchema } from '@/components/seo/JsonLd';
+import LoadingServicePage from './loading';
+import Error from './error';
+import { useCart } from '@/hooks/useCart';
+import { useServices } from '@/hooks/useServices';
+import { useState } from 'react';
 
 // ============================================================================
 // 🧮 PARTIE 1: LOGIQUE DE DONNÉES
@@ -94,33 +91,34 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ serviceId: string }>;
+  params: { serviceId: string };
 }): Promise<Metadata> {
-  const { serviceId } = await params;
+  const { serviceId } = params;
 
   if (URL_REDIRECTS[serviceId]) {
     redirect(`/services/${URL_REDIRECTS[serviceId]}`);
   }
 
-  const analytics = getServiceAnalytics(serviceId);
-  if (!analytics) {
+  const service = allServices.find((s) => s.id === serviceId);
+  if (!service) {
     return {
       title: 'Service non trouvé',
       robots: { index: false },
     };
   }
 
-  const { service } = analytics;
   const heroImage = `/images/services/${service.id}-og.jpg`;
 
   return {
-    title: `${service.name} - ${service.price}€ | Expert ${service.subCategory}`,
-    description: `${service.description} ✅ ${service.features.length} fonctions incluses.`,
-    alternates: {
-      canonical: `/services/${service.id}`,
-    },
+    title: `${service.name} | SDS`,
+    description: service.description,
     openGraph: {
-      title: `${service.name} | Soofmaax`,
+      title: `${service.name} | SDS`,
+      description: service.description,
+      images: [heroImage],
+    },
+    twitter: {
+      title: `${service.name} | SDS`,
       description: service.description,
       images: [heroImage],
     },
@@ -132,7 +130,7 @@ export async function generateMetadata({
 // ============================================================================
 
 const getCategoryIcon = (subCategory: string) => {
-  const icons: Record<string, any> = {
+  const icons: Record<string, LucideIcon> = {
     visibilite: Globe,
     conversion: Target,
     vente: BarChart,
@@ -167,100 +165,160 @@ interface PageProps {
 }
 
 // Utilisation de l'interface pour typer les props du composant
-export default async function ServiceDetailPage({ params }: PageProps) {
-  const { serviceId } = await params;
+export default function ServiceDetailPage({ params }: { params: { serviceId: string } }) {
+  const { service, isLoading, isError } = useService(params.serviceId);
 
-  if (URL_REDIRECTS[serviceId]) {
-    redirect(`/services/${URL_REDIRECTS[serviceId]}`);
-  }
+  const { services } = useServices();
+  const { addItem } = useCart();
+  const [selectedAddons, setSelectedAddons] = useState<string[]>([]);
 
-  const analytics = getServiceAnalytics(serviceId);
-  if (!analytics) {
-    notFound();
-  }
+  if (isLoading) return <LoadingServicePage />;
+  if (isError) return <Error />;
+  if (!service) return <Error />;
 
-  const { service, relatedServices, complementaryServices, stats } = analytics;
-  const CategoryIcon = getCategoryIcon(service.subCategory);
+  // Find compatible add-ons (services whose id is in service.dependencies)
+  const addOns = (services && service.dependencies)
+    ? services.filter((s: any) => service.dependencies.includes(s.id))
+    : [];
+
   const heroImage = `/images/services/${service.id}-hero.jpg`;
+  const CategoryIcon = getCategoryIcon(service.subCategory);
+
+  // Handle add-on toggle
+  const handleToggleAddon = (addOnId: string) => {
+    setSelectedAddons((prev) =>
+      prev.includes(addOnId)
+        ? prev.filter((id) => id !== addOnId)
+        : [...prev, addOnId]
+    );
+  };
+
+  const handleAddToCart = () => {
+    addItem(service.id, selectedAddons, addOns.map((a: any) => a.id));
+    // Optionally redirect or show toast
+    window.location.href = '/cart';
+  };
 
   return (
-    <article className="bg-cream min-h-screen">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-24">
-        <nav aria-label="Breadcrumb" className="mb-8">
-          <ol className="flex items-center space-x-2 text-sm text-charcoal/60">
-            <li><Link href="/" className="hover:text-magenta">Accueil</Link></li>
-            <ChevronRight className="w-4 h-4" />
-            <li><Link href="/services" className="hover:text-magenta">Services</Link></li>
-            <ChevronRight className="w-4 h-4" />
-            <li className="text-charcoal font-medium">{service.name}</li>
-          </ol>
-        </nav>
+    <PageContainer className="bg-cream min-h-screen pt-8 pb-16">
+      <JsonLd data={createServiceSchema(service)} />
+      <nav aria-label="Breadcrumb" className="mb-8">
+        <ol className="flex items-center space-x-2 text-sm text-charcoal/60">
+          <li><Link href="/" className="hover:text-magenta">Accueil</Link></li>
+          <ChevronRight className="w-4 h-4" />
+          <li><Link href="/services" className="hover:text-magenta">Services</Link></li>
+          <ChevronRight className="w-4 h-4" />
+          <li className="text-charcoal font-medium">{service.name}</li>
+        </ol>
+      </nav>
 
-        <div className="grid grid-cols-1 xl:grid-cols-5 gap-12 lg:gap-16">
-          <main className="xl:col-span-3 space-y-12">
-            <header className="text-center lg:text-left">
-              <div className="flex flex-col lg:flex-row lg:items-center gap-6 mb-8">
-                <div className="relative w-full lg:w-80 aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-rose-powder/20 to-magenta/10 shadow-lg">
-                  <Image
-                    src={heroImage}
-                    alt={`Illustration pour ${service.name}`}
-                    fill
-                    priority
-                    className="object-cover"
-                    sizes="(max-width: 1024px) 100vw, 320px"
-                  />
-                </div>
-                <div className="flex-1 space-y-4">
-                  <Badge className={`${getCategoryColor(service.subCategory)} flex items-center gap-2 w-fit mx-auto lg:mx-0`}>
-                    <CategoryIcon className="w-4 h-4" />
-                    {service.subCategory}
-                  </Badge>
-                  <h1 className="text-4xl lg:text-6xl font-playfair font-bold text-charcoal leading-tight">
-                    {service.name}
-                  </h1>
-                  <div className="flex items-center justify-center lg:justify-start gap-2">
-                    <div className="flex text-yellow-500">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-current" />
-                      ))}
-                    </div>
-                    <span className="text-sm text-charcoal/70">
-                      {stats.avgRating}/5 ({stats.totalReviews} avis)
-                    </span>
-                  </div>
+      <div className="flex flex-col lg:flex-row gap-12">
+        <main className="flex-1 space-y-10">
+          <header>
+            <div className="flex flex-col md:flex-row md:items-center gap-6 mb-8">
+              <div className="relative w-full md:w-80 aspect-video rounded-2xl overflow-hidden bg-gradient-to-br from-rose-powder/20 to-magenta/10 shadow-lg">
+                <Image
+                  src={heroImage}
+                  alt={`Illustration pour ${service.name}`}
+                  fill
+                  priority
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 320px"
+                />
+              </div>
+              <div className="flex-1 space-y-4">
+                <Badge className={`${getCategoryColor(service.subCategory)} flex items-center gap-2 w-fit mx-auto md:mx-0`}>
+                  <CategoryIcon className="w-4 h-4" />
+                  {service.subCategory}
+                </Badge>
+                <h1 className="text-4xl font-extrabold font-playfair text-charcoal leading-tight">
+                  {service.name}
+                </h1>
+                <div className="flex items-center gap-2">
+                  <span className="font-bold text-magenta text-2xl">
+                    {service.price}€
+                  </span>
+                  <span className="text-sm text-charcoal/70">
+                    {service.features.length} fonctionnalités incluses
+                  </span>
                 </div>
               </div>
-              <p className="text-xl lg:text-2xl text-charcoal/80 leading-relaxed max-w-4xl mx-auto lg:mx-0">
-                {service.description}
-              </p>
-            </header>
+            </div>
+            <p className="text-xl text-charcoal/80 leading-relaxed max-w-3xl">
+              {service.description}
+            </p>
+          </header>
+          <section>
+            <h2 className="text-2xl font-bold text-charcoal mb-5">
+              Fonctionnalités & Avantages
+            </h2>
+            <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+              {service.features.map((feature: string, i: number) => (
+                <li key={i} className="flex items-start gap-3">
+                  <span className="w-8 h-8 rounded-full bg-gradient-rose flex items-center justify-center flex-shrink-0">
+                    <Check className="w-4 h-4 text-white" />
+                  </span>
+                  <span className="pt-1 text-charcoal font-medium">{feature}</span>
+                </li>
+              ))}
+            </ul>
+            {service.price && (
+              <div className="mb-8">
+                <span className="inline-block bg-magenta text-white font-bold px-6 py-3 rounded-full text-lg shadow">
+                  À partir de {service.price}€
+                </span>
+              </div>
+            )}
+          </section>
 
+          {/* Add-ons selection */}
+          {addOns.length > 0 && (
             <section>
-              <h2 className="text-3xl font-playfair font-bold text-charcoal mb-8">
-                Fonctionnalités incluses
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {service.features.map((feature) => (
-                  <div key={feature} className="flex items-start space-x-4">
-                    <div className="w-8 h-8 rounded-full bg-gradient-rose flex items-center justify-center flex-shrink-0">
-                      <Check className="w-4 h-4 text-white" />
+              <h2 className="text-xl font-bold text-charcoal mb-4">Extensions & options complémentaires</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                {addOns.map((addOn: any) => (
+                  <label
+                    key={addOn.id}
+                    className={`flex items-center bg-white rounded-lg shadow p-4 cursor-pointer hover:bg-rose-powder/10 transition-all ${
+                      selectedAddons.includes(addOn.id) ? 'ring-2 ring-magenta' : ''
+                    }`}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedAddons.includes(addOn.id)}
+                      onChange={() => handleToggleAddon(addOn.id)}
+                      className="accent-magenta w-5 h-5 mr-3"
+                    />
+                    <div>
+                      <div className="font-semibold text-charcoal">{addOn.name}</div>
+                      <div className="text-charcoal/70 text-sm">{addOn.description}</div>
+                      <div className="font-semibold text-magenta mt-1">+{addOn.price}€</div>
                     </div>
-                    <div className="flex-1 pt-1">
-                      <h3 className="font-semibold text-charcoal">{feature}</h3>
-                    </div>
-                  </div>
+                  </label>
                 ))}
               </div>
             </section>
-          </main>
+          )}
 
-          <Sidebar 
-            service={service}
-            relatedServices={relatedServices}
-            complementaryServices={complementaryServices}
-          />
-        </div>
+          {/* CTA */}
+          <section>
+            <Button
+              className="bg-gradient-rose hover:opacity-90 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg transition-all duration-300"
+              onClick={handleAddToCart}
+            >
+              Ajouter au panier
+            </Button>
+          </section>
+        </main>
+        <aside className="flex-shrink-0 hidden lg:block w-96"></aside>
       </div>
-    </article>
+    </PageContainer>
+  );
+}
+        <aside className="flex-shrink-0 hidden lg:block w-96">
+          {/* Bonus: placez ici des sections annexes, témoignages, etc. */}
+        </aside>
+      </div>
+    </PageContainer>
   );
 }

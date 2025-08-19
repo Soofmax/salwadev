@@ -1,21 +1,24 @@
-import { mockUsers } from "@/src/data/mocks/mockUsers";
-
-// const API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+import { prisma } from "@/src/lib/prisma";
+import { User } from "@prisma/client";
 
 export const userService = {
-  async getAllUsers() {
-    // const response = await fetch(`${API_URL}/users`);
-    // const data = await response.json();
-    // return data;
-    return mockUsers;
+  async getAllUsers(): Promise<User[]> {
+    return prisma.user.findMany({ orderBy: { createdAt: "desc" } });
   },
 
-  async getUserById(id: string) {
-    // const response = await fetch(`${API_URL}/users/${id}`);
-    // const data = await response.json();
-    // return data;
-    return mockUsers.find(user => user.id === id);
+  async getUserById(id: string): Promise<User | null> {
+    return prisma.user.findUnique({ where: { id } });
+  },
+
+  async createUser(data: Pick<User, "name" | "email" | "role">): Promise<User> {
+    return prisma.user.create({ data });
+  },
+
+  async updateUser(id: string, data: Partial<Pick<User, "name" | "email" | "role">>): Promise<User | null> {
+    return prisma.user.update({ where: { id }, data });
+  },
+
+  async deleteUser(id: string): Promise<User | null> {
+    return prisma.user.delete({ where: { id } });
   },
 };
-
-

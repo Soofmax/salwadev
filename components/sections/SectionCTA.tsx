@@ -3,46 +3,48 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import type { LucideIcon } from 'lucide-react';
+import { z } from 'zod';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
-type CTAAction = {
-  label: string;
-  href: string;
-  icon?: LucideIcon;
-  variant?: 'default' | 'secondary' | 'outline';
-  className?: string;
-};
+// Zod schema for SectionCTA props
+export const sectionCtaSchema = z.object({
+  title: z.string(),
+  subtitle: z.string().optional(),
+  icon: z.any().optional(),
+  iconClass: z.string().optional(),
+  bgClass: z.string().optional(),
+  actions: z.array(z.object({
+    label: z.string(),
+    href: z.string(),
+    icon: z.any().optional(),
+    variant: z.string().optional(),
+    className: z.string().optional(),
+  })),
+  valueProps: z.array(z.object({
+    icon: z.any(),
+    title: z.string(),
+    description: z.string(),
+    iconBgClass: z.string().optional()
+  })).optional(),
+  className: z.string().optional(),
+  animatedBg: z.any().optional(),
+});
+export type SectionCTAProps = z.infer<typeof sectionCtaSchema>;
 
-type ValueProp = {
-  icon: LucideIcon;
-  title: string;
-  description: string;
-  iconBgClass?: string;
-};
+export function SectionCTA(props: SectionCTAProps) {
+  const {
+    title,
+    subtitle,
+    icon: Icon,
+    iconClass = 'p-3 bg-white/20 rounded-full',
+    bgClass = 'bg-gradient-rose',
+    actions,
+    valueProps,
+    className = '',
+    animatedBg,
+  } = sectionCtaSchema.parse(props);
 
-interface SectionCTAProps {
-  title: string;
-  subtitle?: string;
-  icon?: LucideIcon;
-  iconClass?: string;
-  bgClass?: string;
-  actions: CTAAction[];
-  valueProps?: ValueProp[];
-  className?: string;
-  // Optionnel: tu peux ajouter une prop pour le background animé si besoin
-  animatedBg?: React.ReactNode;
-}
-
-export function SectionCTA({
-  title,
-  subtitle,
-  icon: Icon,
-  iconClass = 'p-3 bg-white/20 rounded-full',
-  bgClass = 'bg-gradient-rose',
-  actions,
-  valueProps,
-  className = '',
-  animatedBg,
-}: SectionCTAProps) {
   return (
     <section className={`py-20 relative overflow-hidden ${bgClass} ${className}`}>
       {animatedBg && <div className="absolute inset-0 opacity-10">{animatedBg}</div>}

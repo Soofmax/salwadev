@@ -28,6 +28,7 @@ import {
   Zap,
   RefreshCw
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface Integration {
   id: string;
@@ -35,12 +36,12 @@ interface Integration {
   description: string;
   category: string;
   status: 'connected' | 'disconnected' | 'error';
-  icon: any;
+  icon: LucideIcon;
   color: string;
   lastSync?: string;
   apiKey?: string;
   webhookUrl?: string;
-  settings: Record<string, any>;
+  settings: Record<string, unknown>;
 }
 
 export default function IntegrationsPage() {

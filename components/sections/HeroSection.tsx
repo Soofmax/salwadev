@@ -5,9 +5,45 @@ import { Button } from '@/components/ui/button';
 import { ArrowDown, Sparkles, Star, Zap, Heart } from 'lucide-react';
 import Link from 'next/link';
 
-export function HeroSection() {
+import { z } from "zod";
+
+// Zod Schema and Type for the HeroSection
+export const heroSectionSchema = z.object({
+  badge: z.string().default("Développeuse Web & Blockchain"),
+  words: z.array(z.string()).min(1),
+  heading: z.string(),
+  subtitle: z.string(),
+  stats: z.array(z.object({
+    label: z.string(),
+    value: z.string()
+  })),
+  ctas: z.array(z.object({
+    label: z.string(),
+    href: z.string(),
+    variant: z.string().optional(),
+    icon: z.any().optional()
+  })),
+  trustIndicators: z.array(z.object({
+    label: z.string(),
+    icon: z.any()
+  })),
+  animatedBackground: z.boolean().optional()
+});
+export type HeroSectionProps = z.infer<typeof heroSectionSchema>;
+
+export function HeroSection(props: HeroSectionProps) {
+  const {
+    badge,
+    words,
+    heading,
+    subtitle,
+    stats,
+    ctas,
+    trustIndicators,
+    animatedBackground = true
+  } = heroSectionSchema.parse(props);
+
   const [currentWord, setCurrentWord] = useState(0);
-  const words = ['Glamour', 'Performantes', 'Innovantes', 'Créatives'];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -22,6 +58,7 @@ export function HeroSection() {
       aria-label="Section d'accueil principale"
     >
       {/* Animated Background Elements */}
+      {animatedBackground && (
       <div className="absolute inset-0 opacity-30" aria-hidden="true">
         <div className="absolute top-20 left-10 animate-float">
           <Star className="w-8 h-8 text-magenta" />
@@ -45,6 +82,7 @@ export function HeroSection() {
           <Zap className="w-5 h-5 text-rose-powder" />
         </div>
       </div>
+      )}
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 pt-20">
         <div className="max-w-4xl mx-auto text-center">
@@ -52,13 +90,13 @@ export function HeroSection() {
           <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-rose-powder/30 rounded-full px-6 py-2 mb-8">
             <Sparkles className="w-4 h-4 text-magenta" aria-hidden="true" />
             <span className="text-sm font-medium text-charcoal">
-              Développeuse Web & Blockchain
+              {badge}
             </span>
           </div>
 
           {/* Main Heading */}
           <h1 className="font-playfair text-5xl md:text-7xl font-bold text-charcoal mb-6 leading-tight">
-            Solutions Web
+            {heading}
             <br />
             <span className="text-gradient relative">
               <span aria-live="polite" aria-atomic="true">
@@ -73,9 +111,7 @@ export function HeroSection() {
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-charcoal/80 mb-8 max-w-3xl mx-auto leading-relaxed font-light">
-            Je transforme vos idées en expériences digitales exceptionnelles.
-            Sites vitrines, landing pages, intégrations Web3 et bien plus
-            encore.
+            {subtitle}
           </p>
 
           {/* Stats */}
@@ -84,30 +120,16 @@ export function HeroSection() {
             role="region"
             aria-label="Statistiques de performance"
           >
-            <div className="text-center">
-              <div className="text-3xl font-bold text-magenta font-playfair">
-                50+
+            {stats.map((s, idx) => (
+              <div className="text-center" key={idx}>
+                <div className="text-3xl font-bold text-magenta font-playfair">
+                  {s.value}
+                </div>
+                <div className="text-sm text-charcoal/70 font-medium">
+                  {s.label}
+                </div>
               </div>
-              <div className="text-sm text-charcoal/70 font-medium">
-                Projets Réalisés
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-magenta font-playfair">
-                100%
-              </div>
-              <div className="text-sm text-charcoal/70 font-medium">
-                Clients Satisfaits
-              </div>
-            </div>
-            <div className="text-center">
-              <div className="text-3xl font-bold text-magenta font-playfair">
-                48h
-              </div>
-              <div className="text-sm text-charcoal/70 font-medium">
-                Temps de Livraison
-              </div>
-            </div>
+            ))}
           </div>
 
           {/* CTA Buttons */}
@@ -115,24 +137,20 @@ export function HeroSection() {
             className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12"
             aria-label="Actions principales"
           >
-            <Link href="/services">
-              <Button
-                size="lg"
-                className="bg-gradient-rose hover:opacity-90 text-white shadow-rose-lg px-8 py-6 text-lg font-semibold transform hover:scale-105 transition-all duration-300"
-              >
-                Découvrir mes Services
-                <Sparkles className="ml-2 w-5 h-5" aria-hidden="true" />
-              </Button>
-            </Link>
-            <Link href="/portfolio">
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-2 border-magenta text-magenta hover:bg-magenta hover:text-white px-8 py-6 text-lg font-semibold transform hover:scale-105 transition-all duration-300"
-              >
-                Voir mon Portfolio
-              </Button>
-            </Link>
+            {ctas.map((cta, idx) => (
+              <Link href={cta.href} key={idx}>
+                <Button
+                  size="lg"
+                  variant={cta.variant === "outline" ? "outline" : "default"}
+                  className={cta.variant === "outline"
+                    ? "border-2 border-magenta text-magenta hover:bg-magenta hover:text-white px-8 py-6 text-lg font-semibold transform hover:scale-105 transition-all duration-300"
+                    : "bg-gradient-rose hover:opacity-90 text-white shadow-rose-lg px-8 py-6 text-lg font-semibold transform hover:scale-105 transition-all duration-300"}
+                >
+                  {cta.label}
+                  {cta.icon && <cta.icon className="ml-2 w-5 h-5" aria-hidden="true" />}
+                </Button>
+              </Link>
+            ))}
           </nav>
 
           {/* Trust Indicators */}
@@ -141,26 +159,15 @@ export function HeroSection() {
             role="region"
             aria-label="Indicateurs de confiance"
           >
-            <div className="flex items-center space-x-2">
-              <div 
-                className="w-2 h-2 bg-green-500 rounded-full animate-pulse"
-                aria-hidden="true"
-              ></div>
-              <span>Disponible pour nouveaux projets</span>
-            </div>
-            <span className="hidden sm:inline" aria-hidden="true">•</span>
-            <div className="flex items-center space-x-2">
-              <Zap className="w-4 h-4 text-magenta" aria-hidden="true" />
-              <span>Livraison express</span>
-            </div>
-            <span className="hidden sm:inline" aria-hidden="true">•</span>
-            <div className="flex items-center space-x-2">
-              <Heart 
-                className="w-4 h-4 text-magenta fill-current" 
-                aria-hidden="true" 
-              />
-              <span>Support personnalisé</span>
-            </div>
+            {trustIndicators.map((ti, idx) => (
+              <div className="flex items-center space-x-2" key={idx}>
+                {ti.icon && <ti.icon className="w-4 h-4 text-magenta" aria-hidden="true" />}
+                <span>{ti.label}</span>
+                {idx < trustIndicators.length - 1 && (
+                  <span className="hidden sm:inline" aria-hidden="true">•</span>
+                )}
+              </div>
+            ))}
           </div>
         </div>
 

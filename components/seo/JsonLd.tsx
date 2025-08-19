@@ -1,21 +1,36 @@
 import Script from 'next/script';
+import { JSONValue } from '@/src/types/json';
+import { z } from 'zod';
+
+const JsonSchema: z.ZodType<JSONValue> = z.lazy(() =>
+  z.union([
+    z.string(),
+    z.number(),
+    z.boolean(),
+    z.null(),
+    z.array(JsonSchema),
+    z.record(JsonSchema),
+  ])
+);
 
 interface JsonLdProps {
-  data: Record<string, any>;
+  data: JSONValue;
 }
 
 export function JsonLd({ data }: JsonLdProps) {
+  const parsed = JsonSchema.safeParse(data);
+  const json = parsed.success ? parsed.data : data;
   return (
     <Script
       id="json-ld"
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(json) }}
     />
   );
 }
 
 // Données structurées pour l'organisation
-export const organizationSchema = {
+export const organizationSchema: JSONValue = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'SDS - Services de Développement Sur-Mesure',
@@ -59,7 +74,7 @@ export function createServiceSchema(service: {
   description: string;
   price: number;
   features: string[];
-}) {
+}): JSONValue {
   return {
     '@context': 'https://schema.org',
     '@type': 'Service',
@@ -87,7 +102,7 @@ export function createServiceSchema(service: {
 }
 
 // Données structurées pour les avis clients
-export const reviewsSchema = {
+export const reviewsSchema: JSONValue = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   name: 'SDS - Services de Développement Sur-Mesure',

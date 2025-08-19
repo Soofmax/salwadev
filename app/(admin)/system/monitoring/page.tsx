@@ -25,6 +25,7 @@ import {
   Settings,
   Download
 } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface SystemMetric {
   name: string;
@@ -32,7 +33,7 @@ interface SystemMetric {
   unit: string;
   status: 'good' | 'warning' | 'critical';
   trend: 'up' | 'down' | 'stable';
-  icon: any;
+  icon: LucideIcon;
   color: string;
 }
 
@@ -42,7 +43,7 @@ interface ServiceStatus {
   uptime: string;
   responseTime: number;
   lastCheck: string;
-  icon: any;
+  icon: LucideIcon;
 }
 
 export default function SystemMonitoring() {

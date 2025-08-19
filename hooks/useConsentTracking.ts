@@ -1,6 +1,4 @@
 // Fichier: hooks/useConsentTracking.ts
-// Lit le consentement stocké par la CookieBanner et fournit une fonction de tracking sécurisée.
-
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -14,14 +12,14 @@ interface Consent {
 // Valeur par défaut pour éviter les états nuls
 const defaultConsent: Consent = { analytics: false, marketing: false };
 
-// Constante pour la clé de stockage, partagée avec la bannière
+// Constante pour la clé de stockage
 const CONSENT_STORAGE_KEY = 'cookie_consent';
 
 /**
  * Hook pour gérer le consentement utilisateur et fournir une fonction de suivi sécurisée.
  * @returns {object} Un objet contenant le statut du consentement et la fonction de suivi.
  * @property {boolean} hasAnalyticsConsent - Vrai si l'utilisateur a consenti au suivi analytique.
- * @property {(eventName: string, data?: Record<string, any>) => void} trackEvent - Fonction pour envoyer un événement de suivi.
+ * @property {(eventName: string, data?: Record<string, unknown>) => void} trackEvent - Fonction pour envoyer un événement de suivi.
  */
 export function useConsentTracking() {
   const [consent, setConsent] = useState<Consent>(defaultConsent);
@@ -45,7 +43,7 @@ export function useConsentTracking() {
    * Utilise useCallback pour la mémoïsation, optimisant les performances.
    */
   const trackEvent = useCallback(
-    (eventName: string, data?: Record<string, any>) => {
+    (eventName: string, data?: Record<string, unknown>) => {
       // Vérification robuste : consentement + existence de la fonction de suivi globale
       if (consent.analytics && typeof window.gtag === 'function') {
         window.gtag('event', eventName, data);
@@ -65,15 +63,4 @@ export function useConsentTracking() {
     hasAnalyticsConsent: consent.analytics,
     trackEvent,
   };
-}
-
-// Déclaration globale pour informer TypeScript de l'existence de `window.gtag`
-declare global {
-  interface Window {
-    gtag?: (
-      type: 'event',
-      eventName: string,
-      data?: Record<string, any>
-    ) => void;
-  }
 }

@@ -4,52 +4,45 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Star, Quote } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
-const testimonials = [
-  {
-    id: 1,
-    name: 'Marie Dubois',
-    role: 'CEO, Studio Créatif',
-    avatar:
-      'https://images.pexels.com/photos/1499327/pexels-photo-1499327.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
-    content:
-      "SDS a transformé notre vision en réalité digitale. Son approche créative et sa maîtrise technique ont dépassé toutes nos attentes. Un travail d'exception !",
-    rating: 5,
-  },
-  {
-    id: 2,
-    name: 'Thomas Martin',
-    role: 'Fondateur, TechStart',
-    avatar:
-      'https://images.pexels.com/photos/1674752/pexels-photo-1674752.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
-    content:
-      "L'intégration Web3 de notre plateforme était complexe, mais SDS a géré chaque détail avec professionnalisme. Résultat : une solution élégante et performante.",
-    rating: 5,
-  },
-  {
-    id: 3,
-    name: 'Sophie Laurent',
-    role: 'Directrice Marketing',
-    avatar:
-      'https://images.pexels.com/photos/1036627/pexels-photo-1036627.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2',
-    content:
-      "Notre nouveau site vitrine génère 3x plus de leads qu'avant. Le design est magnifique et l'expérience utilisateur parfaite. Merci SDS !",
-    rating: 5,
-  },
-];
+import { Card, CardContent } from '@/components/ui/card';
+import { Star, Quote } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { z } from 'zod';
 
-export function TestimonialsSection() {
+// Zod schema for TestimonialsSection props
+export const testimonialsSectionSchema = z.object({
+  heading: z.string(),
+  headingHighlight: z.string(),
+  description: z.string(),
+  testimonials: z.array(z.object({
+    id: z.string(),
+    name: z.string(),
+    role: z.string(),
+    avatar: z.string().url(),
+    content: z.string(),
+    rating: z.number().min(1).max(5)
+  })),
+  trustScore: z.object({
+    average: z.string(),
+    count: z.string()
+  })
+});
+export type TestimonialsSectionProps = z.infer<typeof testimonialsSectionSchema>;
+
+export function TestimonialsSection(props: TestimonialsSectionProps) {
+  const { heading, headingHighlight, description, testimonials, trustScore } = testimonialsSectionSchema.parse(props);
+
   return (
     <section className="py-20 bg-gradient-to-br from-rose-powder/10 to-cream">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="font-playfair text-4xl md:text-5xl font-bold text-charcoal mb-6">
-            Ce que Disent
-            <span className="text-gradient block">Mes Clients</span>
+            {heading}
+            <span className="text-gradient block">{headingHighlight}</span>
           </h2>
           <p className="text-xl text-charcoal/70 leading-relaxed">
-            Leurs succès sont ma plus belle récompense. Découvrez pourquoi ils
-            me font confiance pour leurs projets digitaux.
+            {description}
           </p>
         </div>
 
@@ -96,9 +89,7 @@ export function TestimonialsSection() {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h4 className="font-semibold text-charcoal">
-                      {testimonial.name}
-                    </h4>
+                    <h4 className="font-semibold text-charcoal">{testimonial.name}</h4>
                     <p className="text-sm text-charcoal/60">
                       {testimonial.role}
                     </p>
@@ -114,7 +105,7 @@ export function TestimonialsSection() {
           <div className="inline-flex items-center space-x-8 bg-white/80 backdrop-blur-sm rounded-full px-8 py-4 shadow-rose">
             <div className="flex items-center space-x-2">
               <div className="text-2xl font-bold text-magenta font-playfair">
-                4.9
+                {trustScore.average}
               </div>
               <div className="flex items-center space-x-1">
                 {[...Array(5)].map((_, i) => (
@@ -127,7 +118,7 @@ export function TestimonialsSection() {
             </div>
             <div className="hidden sm:block w-px h-6 bg-rose-powder"></div>
             <div className="text-sm text-charcoal/70 font-medium">
-              Note moyenne sur 50+ projets
+              {trustScore.count}
             </div>
           </div>
         </div>

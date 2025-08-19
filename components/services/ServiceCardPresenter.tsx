@@ -125,15 +125,33 @@ export function ServiceCardPresenter({
   }
 
   // --- VUE EN GRILLE (par défaut) ---
+  // Animation index passed via className (e.g. 'animate-delay-200') or prop
+  // We'll expect ServicesSection to add `animationIndex` in className or as prop
+  // We'll extract the animation delay from className or accept an `animationIndex` prop for stagger
+  const animationDelayMs = (className && /delay-(\d+)/.exec(className)) ? parseInt(/delay-(\d+)/.exec(className)![1]) : 0;
+
   return (
     <Card
       className={cn(
         'flex flex-col h-full transition-all duration-300 relative',
+        // Gradient background, hover scale, shadow, and smooth transitions
+        'bg-gradient-to-br from-white via-rose-powder/10 to-magenta/10',
+        'shadow-lg hover:shadow-2xl hover:scale-105',
+        'hover:z-10',
+        'cursor-pointer',
+        'will-change-transform',
+        'ease-out',
         isSelected
           ? 'ring-2 ring-magenta'
           : 'hover:shadow-rose border-rose-powder/30',
+        // Animation (fade-in/slide-up with stagger)
+        'opacity-0 translate-y-4',
         className
       )}
+      style={{
+        animation: `serviceCardFadeIn 0.5s ease-out forwards`,
+        animationDelay: `${animationDelayMs}ms`
+      }}
     >
       <CardHeader className="pb-4">
         {service.popular && (
@@ -175,6 +193,12 @@ export function ServiceCardPresenter({
       <CardFooter className="pt-4 mt-auto flex flex-col gap-2">
         {children}
       </CardFooter>
+      <style jsx global>{`
+        @keyframes serviceCardFadeIn {
+          from { opacity: 0; transform: translateY(16px);}
+          to { opacity: 1; transform: translateY(0);}
+        }
+      `}</style>
     </Card>
   );
 }
