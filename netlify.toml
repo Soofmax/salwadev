@@ -1,5 +1,6 @@
 # Fichier de configuration pour Netlify
 [build]
+  command = "npx netlify db init && npm run build"
   # Commande pour construire le site
   command = "next build"
   
