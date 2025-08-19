@@ -25,7 +25,10 @@
     "autoprefixer": "^10.4.15",
     "postcss": "^8.4.31",
     "sonner": "^1.5.0",
-    "react-icons": "^5.2.0"
+    "react-icons": "^5.2.0",
+    "@radix-ui/react-alert-dialog": "^1.0.0",
+    "@radix-ui/react-avatar": "^1.0.0",
+    "class-variance-authority": "^0.6.2"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^15.4.6",
