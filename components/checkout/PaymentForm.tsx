@@ -9,14 +9,6 @@ import { Button } from "@/components/ui/button";
 const paymentFormSchema = z.object({
   provider: z.enum(["stripe", "paypal", "coinbase"], { required_error: "Choisissez un moyen de paiement." }),
   email: z.string().email("Email invalide."),
-  items: z.array(
-    z.object({
-      serviceId: z.string(),
-      addonIds: z.array(z.string()),
-      unitPrice: z.number().optional(),
-      quantity: z.number().optional(),
-    })
-  ),
 });
 
 type PaymentFormValues = z.infer<typeof paymentFormSchema>;
@@ -35,7 +27,6 @@ export function PaymentForm({ items }: { items: any[] }) {
     defaultValues: {
       provider: "stripe",
       email: "",
-      items,
     },
   });
 
@@ -43,10 +34,18 @@ export function PaymentForm({ items }: { items: any[] }) {
     setServerError(null);
     setLoading(true);
     try {
+      const payload = {
+        provider: data.provider,
+        email: data.email,
+        items: (items || []).map((it: any) => ({
+          serviceId: it.serviceId,
+          addonIds: Array.isArray(it.addons) ? it.addons.map((a: any) => a.id) : (it.addonIds || []),
+        })),
+      };
       const res = await fetch("/api/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
       const result = await res.json();
       if (res.ok && result.url) {
@@ -97,7 +96,7 @@ export function PaymentForm({ items }: { items: any[] }) {
         )}
       </div>
 
-      <input type="hidden" {...register('items')} value={JSON.stringify(items)} />
+      {/* No hidden input for items, they are included in the payload from props */}
 
       {serverError && <div className="text-red-600 text-center mb-4">{serverError}</div>}
 
